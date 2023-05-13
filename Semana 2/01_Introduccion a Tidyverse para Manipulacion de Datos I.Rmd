@@ -1,0 +1,74 @@
+---
+title: "Introducción a Tidyverse para Manipulación de Datos I"
+output: html_document
+date: "2023-05-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Seleccionar columnas
+
+`select()`: Se utiliza para seleccionar columnas específicas de un data frame.
+
+```{r}
+##Uso de subset
+# subset(dataframe, condicion)
+
+##Indexacion de expresiones logicas
+```
+
+
+## Filtering 
+`filter()`: Permite filtrar filas de un data frame en base a una condición.
+
+```{r}
+
+
+```
+
+
+## Modificación de columnas (mutate)
+
+`mutate():` Permite agregar nuevas columnas a un data frame o modificar las existentes.
+
+
+```{r}
+
+
+
+```
+
+`group_by():` Agrupa las filas de un data frame por una o más columnas, lo que permite realizar operaciones sobre cada grupo por separado
+
+
+```{r}
+
+
+
+```
+
+
+`summarise():` Permite resumir los datos de un data frame, calculando estadísticas descriptivas o aplicando funciones personalizadas.
+
+
+```{r}
+
+
+
+```
+
+
+`arrange():` Ordena las filas de un data frame en base a una o más columnas.
+
+
+
+```{r}
+
+
+
+```
+

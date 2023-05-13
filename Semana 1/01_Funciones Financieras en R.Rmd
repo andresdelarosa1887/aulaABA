@@ -8,17 +8,15 @@ date: "2023-05-11"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Matematicas Financieras en R
+## Matemáticas Financieras en R
 
-### Valor Presente 
-Esta función nos permite calcular cuánto vale hoy una cantidad futura de dinero, 
-dados una tasa de interés y el tiempo que falta para recibirlo.
+### Valor Presente
 
-La formula es: 
-PV = FV / (1 + r)^n
+Esta función nos permite calcular cuánto vale hoy una cantidad futura de dinero, dados una tasa de interés y el tiempo que falta para recibirlo.
 
-donde PV es el valor presente, FV es el valor futuro, r es la  tasa de descuento y n es el número de períodos.
+La formula es: $PV = FV / (1 + r)^n$
 
+donde PV es el valor presente, FV es el valor futuro, r es la tasa de descuento y n es el número de períodos.
 
 ```{r}
 valor_presente <- function(valor_futuro,  tasa_de_descuento, numero_periodos) {
@@ -27,7 +25,7 @@ valor_presente <- function(valor_futuro,  tasa_de_descuento, numero_periodos) {
 } 
 ```
 
-Como habia mencionado, las funciones en R son bastantes poderosas porque nos permiten calcular sin tener que repetir bloques de codigo. Por ejemplo, si tenemos diferentes opciones de inversion y queremos calcular y comparar el valor presente de cada una de estas opciones considerando el valor temporal del dinero y la tasa de descuento que refleje el costo de oportunidad de nuestro dinero. 
+Como habia mencionado, las funciones en R son bastantes poderosas porque nos permiten calcular sin tener que repetir bloques de codigo. Por ejemplo, si tenemos diferentes opciones de inversion y queremos calcular y comparar el valor presente de cada una de estas opciones considerando el valor temporal del dinero y la tasa de descuento que refleje el costo de oportunidad de nuestro dinero.
 
 ```{r}
 
@@ -49,11 +47,11 @@ for (valor_futuro in vector_valores_futuros) {
       print(vector_valor_presente)
       }}}
 ```
-Este código nos genera 450 escenarios de valores futuros dados los argumentos de nuestra función de valor presente. 
 
-
+Este código nos genera 450 escenarios de valores futuros dados los argumentos de nuestra función de valor presente.
 
 ### Valor Futuro
+
 Esta función nos permite calcular el valor futuro de una inversión o de una deuda después de un número determinado de períodos. La fórmula es:
 
 ```{r}
@@ -63,15 +61,13 @@ future_value <- function(pv, r, n) {
 }
 ```
 
+### Pago de un préstamo
 
-### Pago de un prestamo
 Esta función nos permite calcular el pago periódico que se debe realizar para amortizar un préstamo o una deuda en un número determinado de períodos.
 
-La formula es: 
-PMT = (r * PV) / (1 - (1 + r)^(-n))
+La formula es: $PMT = (r * PV) / (1 - (1 + r)^(-n))$
 
 donde PMT es el pago periódico, PV es el valor presente, r es la tasa de interés y n es el número de períodos.
-
 
 ```{r}
 payment <- function(pv, r, n) {
@@ -80,11 +76,11 @@ payment <- function(pv, r, n) {
 }
 ```
 
-## Tasas de Interes
+## Tasa de Interés
+
 Esta función nos permite calcular el interés que se genera en un préstamo o una inversión durante un número determinado de períodos.
 
-La fórmula es:
-I = PV * (1 + r)^n - PV
+La fórmula es: $I = PV * (1 + r)^n - PV$
 
 donde I es el interés, PV es el valor presente, r es la tasa de interés y n es el número de períodos.
 
@@ -94,9 +90,3 @@ interest <- function(pv, r, n) {
   return(i)
 }
 ```
-
-
-
-
-
-

@@ -1,0 +1,45 @@
+---
+title: "Introducción a Base R para Manipulación de Datos II"
+output: html_document
+date: "2023-05-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Concatenación
+
+En R, `rbind()` y `cbind()` son funciones que se utilizan para combinar matrices, dataframes o vectores en una sola estructura.
+
+rbind(): se utiliza para unir dos o más objetos por filas, es decir, apilarlos verticalmente. La función rbind() espera que los objetos tengan el mismo número de columnas, ya que agrega las filas debajo de la última fila de cada objeto.
+
+cbind(): se utiliza para unir dos o más objetos por columnas, es decir, agregarlos horizontalmente. La función cbind() espera que los objetos tengan el mismo número de filas, ya que agrega las columnas a la derecha de la última columna de cada objeto.
+
+```{r}
+
+
+```
+
+## Uniones
+
+En R, la función merge() se utiliza para combinar dos o más dataframes en uno solo, basándose en una o más columnas comunes. Es similar a la operación de unión en SQL.
+
+La función merge() en R realiza diferentes tipos de unión (joins) según los valores que se proporcionen en los argumentos all.x y all.y, que se utilizan para especificar qué filas incluir en la unión.
+
+-   Si `all.x = TRUE y all.y = FALSE`, se realiza un left join, es decir, se incluyen todas las filas del primer dataframe (x) y solo las filas del segundo dataframe (y) que coinciden con las filas del primer dataframe.
+
+-   Si `all.x = FALSE y all.y = TRUE`, se realiza un right join, es decir, se incluyen todas las filas del segundo dataframe (y) y solo las filas del primer dataframe (x) que coinciden con las filas del segundo dataframe.
+
+-   Si `all.x = TRUE y all.y = TRUE`, se realiza un full join, es decir, se incluyen todas las filas de ambos dataframes (x e y), aunque no haya coincidencias en las filas.
+
+-   Si `all.x = FALSE y all.y = FALSE`, se realiza un inner join, es decir, solo se incluyen las filas que tienen coincidencias en ambas tablas.
+
+Por defecto, si no se especifican los valores de `all.x y all.y`, la función merge() realiza un inner join.
+
+```{r}
+##Uso de subset
+# subset(dataframe, condicion)
+
+##Indexacion de expresiones logicas
+```

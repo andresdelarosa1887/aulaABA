@@ -1,0 +1,31 @@
+---
+title: "Manipulación de Fechas en R"
+output: html_document
+date: "2023-05-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+La manipulación de fechas es una tarea común en el análisis de datos, y R ofrece diferentes herramientas para realizar esta tarea. En particular, las librerías base de R y lubridate son muy útiles para la manipulación de fechas.
+
+En la librería base de R, las fechas se almacenan como objetos de la clase "Date" o "POSIXct". Para manipular fechas en R, se pueden utilizar las funciones de la librería base como `strptime()` para convertir cadenas de caracteres en objetos de fecha, `format()` para cambiar el formato de una fecha, y `difftime()` para calcular la diferencia entre dos fechas.
+
+Por otro lado, la librería lubridate ofrece una serie de funciones para la manipulación de fechas de manera más intuitiva. Algunas de las funciones más comunes de lubridate son:
+
+-   `ymd()`: Esta función convierte una cadena de caracteres en una fecha en formato "año-mes-día".
+-   `hms()`: Esta función convierte una cadena de caracteres en una hora en formato "horas-minutos-segundos".
+-   `month()`: Esta función extrae el mes de una fecha.
+-   `year()`: Esta función extrae el año de una fecha.
+-   `day()`: Esta función extrae el día de una fecha.
+-   `hour()`: Esta función extrae la hora de una fecha.
+-   `minute()`: Esta función extrae los minutos de una fecha.
+-   `second()`: Esta función extrae los segundos de una fecha.
+
+Además, lubridate también ofrece funciones para realizar operaciones aritméticas con fechas, como por ejemplo, sumar o restar días, semanas, meses o años a una fecha determinada.
+
+```{r}
+
+
+```

@@ -1,0 +1,57 @@
+---
+title: "Introducción a Tidyverse para Manipulación de Datos II"
+output: html_document
+date: "2023-05-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Uniones
+
+-   `inner_join()` Esta función realiza un join interno, es decir, devuelve las filas que tienen coincidencias en ambas tablas en base a una o más columnas en común.
+
+-   `left_join()`: Realiza un join por la izquierda, devolviendo todas las filas del primer data frame (el de la izquierda) y las coincidencias del segundo data frame (el de la derecha).
+
+-   `right_join()`: Realiza un join por la derecha, devolviendo todas las filas del segundo data frame (el de la derecha) y las coincidencias del primer data frame (el de la izquierda).
+
+-   `full_join()`: Realiza un join completo, devolviendo todas las filas de ambos data frames y completando con valores nulos cuando no hay coincidencias.
+
+-   `semi_join()`: Devuelve las filas del primer data frame que tienen coincidencias en el segundo data frame.
+
+-   `anti_join()`: Devuelve las filas del primer data frame que no tienen coincidencias en el segundo data frame.
+
+```{r}
+
+
+```
+
+## Transformaciones de ancho a largo y de largo a ancho.
+
+El data wrangling o manipulación de datos es una tarea esencial en el análisis de datos, y el paquete tidyverse de R ofrece una serie de funciones para facilitar esta tarea. Entre estas funciones, se encuentran `pivot_longer()` y `pivot_wider()`, las cuales permiten transformar data frames de formato ancho a largo y viceversa, respectivamente.
+
+`pivot_longer():` Permite transformar un data frame de formato ancho a largo.
+
+![Pivot Longer](images/pivot_longer_new.png){width="1167"}
+
+```{r}
+
+
+```
+
+`pivot_wider():` Permite transformar un data frame de formato largo a ancho.
+
+![Pivot Wider](images/pivot_wider_new.png)
+
+```{r}
+
+
+```
+
+`gather()` y `spread()`: Estas funciones también permiten transformar data frames entre formato largo y ancho.
+
+```{r}
+
+
+```
