@@ -1,0 +1,64 @@
+---
+title: "Programacion basica en R"
+output: html_document
+date: "2023-05-12"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Estructuras de Control en R
+
+En programación, las estructuras de control son herramientas que permiten controlar el flujo de ejecución de un programa. En R, las estructuras de control son utilizadas para ejecutar ciertas acciones solo si se cumple una determinada condición o para repetir un bloque de código varias veces.
+
+Las estructuras de control en R se pueden clasificar en 2 categorías principales:
+
+Estructuras de control condicionales: estas estructuras permiten ejecutar cierto código solo si se cumple una condición determinada. En R, las estructuras de control condicionales más comunes son if, if-else, y switch.
+
+
+### If Else
+
+```{r}
+secuencia <- seq(from=1, to=7, by=1)
+
+x <- 5 
+if (x>=5) {
+  print("x es mayor a 5")
+} else {
+  print("x es menor a 5")
+}
+```
+
+Estructuras de control de bucles o loops: estas estructuras permiten repetir un bloque de código varias veces. En R, las estructuras de control de bucles más comunes son for, while, y repeat.
+
+
+En R, los bucles for y while son estructuras de control de flujo que se utilizan para repetir un bloque de código varias veces. La diferencia entre ellos es que for es un bucle que se utiliza cuando se conoce el número de iteraciones que se deben realizar, mientras que while es un bucle que se utiliza cuando no se conoce el número de iteraciones que se deben realizar.
+
+### For
+
+```{r}
+for (numero in secuencia) { 
+  if (numero >= 1) {
+    suma_2 <- numero + 2
+    print(suma_2)
+  } else {
+    print('no aplica')
+  }
+  }
+```
+
+
+### While Loop 
+
+```{r}
+contador <- 0 
+while (contador <4) { 
+  cuentame <- secuencia +1 
+  contador <- contador + 1 
+  print(cuentame)
+}
+
+
+```
+
