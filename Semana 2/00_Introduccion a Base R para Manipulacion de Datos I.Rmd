@@ -9,39 +9,48 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Importacion de datos
+
+En esta sección utilizaremos las letras del Banco Central de la República Dominicana, el archivo tiene los Montos Colocados y Tasa de Rendimiento Promedio Ponderada 2007-2023
+
+**Letras del Banco Central**: Instrumentos financieros emitidos a plazos de hasta un año, cuya rentabilidad viene dada por la diferencia entre el precio de adquisición y su valor al vencimiento o valor par.
+
+Fuente: [https://cdn.bancentral.gov.do/documents/instrumentos-de-inversion/instrumentos-operaciones-de-mercado-abierto/documents/letras_bc_consolidado.xlsx?v=1684020088887](https://cdn.bancentral.gov.do/documents/instrumentos-de-inversion/instrumentos-operaciones-de-mercado-abierto/documents/letras_bc_consolidado.xlsx?v=1684020088887 "Link a Letras"){#Link a Letras}
+
 La función `read.table()` en R se utiliza para importar datos tabulares desde un archivo de texto o csv en un dataframe.
 
-```{r cars}
-summary(cars)
+```{r}
+##Leemos la tabla de letras
+letras_bc <- read.table("Semana 2/data/letras_bc_consolidado_clean.csv")
 ```
 
 ## Slicing
 
 Slicing es una técnica que se utiliza para extraer subconjuntos de datos en función de las posiciones de las filas y columnas. En R, se puede utilizar la notación [fila, columna] para extraer una fila y columna específicas de un dataframe.
 
-La notación es: 
+La notación es:
 
 `[fila_inicio:fila_fin, columna_inicio:columna_fin]`
 
-```{r cars}
-summary(cars)
+```{r}
+
+
 ```
 
-## Filtering 
+## Filtering
 
 En Base R, la técnica de filtrado de datos se puede realizar utilizando la función `subset()` o mediante la indexación de los datos con expresiones lógicas.
 
 ```{r}
 ##Uso de subset
 subset(dataframe, condicion)
-
 ##Indexacion de expresiones logicas
 ```
 
-## Crear Columnas 
-En R, se pueden crear nuevas columnas en un dataframe utilizando la notación de corchetes o la función `transform()`. Ambas opciones requieren que se especifique el nombre de la columna que se desea crear, así como una expresión que defina los valores de la columna. 
+## Crear Columnas
 
-El símbolo $ en R se utiliza para acceder a una columna específica de un dataframe. 
+En R, se pueden crear nuevas columnas en un dataframe utilizando la notación de corchetes o la función `transform()`. Ambas opciones requieren que se especifique el nombre de la columna que se desea crear, así como una expresión que defina los valores de la columna.
+
+El símbolo \$ en R se utiliza para acceder a una columna específica de un dataframe.
 
 esta es la sintaxis: `dataframe$nombre_columna`
 
@@ -49,29 +58,20 @@ esta es la sintaxis: `dataframe$nombre_columna`
 datos <- transform(datos, edad_2 = edad * 2)
 ```
 
-## Modificar columnas 
-Para modificar una columna en un dataframe podemos sobre-escribir la misma columna de la misma manera que creamos columnas. 
+## Modificar columnas
 
-
+Para modificar una columna en un dataframe podemos sobre-escribir la misma columna de la misma manera que creamos columnas.
 
 ## Cambiar nombres de columnas
 
 La función `colnames()` permite cambiar los nombres de las columnas de un dataframe. Para utilizarla, se debe asignar un vector de nombres de igual longitud que el número de columnas del dataframe a la función colnames().
 
-
 ```{r}
 names(datos) <- c("Nombre completo", "Edad")
 ```
-
-
 
 La función `names()` permite cambiar los nombres de las columnas de un dataframe, de la misma manera que la función colnames(). La única diferencia es que names() es más genérica y también se puede utilizar para cambiar los nombres de las filas de una matriz.
 
-
 ```{r}
 names(datos) <- c("Nombre completo", "Edad")
 ```
-
-
-
-
