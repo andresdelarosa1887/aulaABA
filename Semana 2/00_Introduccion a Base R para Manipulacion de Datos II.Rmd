@@ -58,12 +58,10 @@ cbind(): se utiliza para unir dos o más objetos por columnas, es decir, agregar
 
 
 ```{r}
-# Create two data frames
-df1 <- data.frame(A = c(1, 2, 3), B = c(4, 5, 6))
-df2 <- data.frame(C = c(7, 8, 9), D = c(10, 11, 12))
-
-# Combine data frames column-wise
-cbind(df1, df2)
+# Creamos un nuevo dataframe con informacion nueva de letras 
+nueva_info_letras <- data.frame(rankeo= seq(1, nrow(letras_bc), by=1))
+#Lo unimos de manera horizontal al dataframe original
+cbind(letras_bc, nueva_info_letras)
 
 ```
 
