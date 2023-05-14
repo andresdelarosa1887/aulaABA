@@ -1,13 +1,11 @@
 
-
-
 ##Importacion
 letras_bc <- read.table("Semana 2/data/letras_bc_consolidado_clean.csv")
-
+colnames(letras_bc)
 ##Slicing 
 letras_bc[1:3,]
 letras_monto_subastado_500 <- letras_bc[letras_bc$MontoSubastado==5000, ]
-
+head(letras_monto_subastado_500)
 #dataframe[fila_inicio:fila_final, columna_inicia:columna_final]
 
 
@@ -17,11 +15,50 @@ letras_monto_subastado_500 <- subset(letras_bc, MontoSubastado==5000)
 ##Creacion de columnas
 letras_monto_subastado_500$RendimientoPPA2 <- 1-(letras_monto_subastado_500$RendimientoPPA *100)
 
-colnames(letras_bc) <- c("1", "2", "3", "4", "5",
-                         "6")
+##Cambio nombre de columnas
+cambio_nombres <- letras_bc ##Asigno a un nuevo dataframe las letras del bc
+head(cambio_nombres) #Utilizo head para ver los primero 5 registros del nuuevo dataframe. 
+colnames(cambio_nombres) <- c("1", "2", "3", "4", "5", "6") #Le cambio el nombre a todas las columnas
+names(cambio_nombres)[1:3] <- c("fecha", "fecha2", "monto") #Le cambio el nombre a las primeras 3 columnas
+head(cambio_nombres) #Utilizo head para ver los cambios realizados
 
-names(letras_bc)[1:3] <- c("fecha", "fecha2", "monto")
-names(letras_bc) <- letras_bc
+
+##Diferencia entre vectores y concatenacion vertical y horizontal
+nuevas_letras <- data.frame( 
+  "FechaSubasta"= c("2023-06-01","2023-06-12", "2023-06-14"), 
+  "FechaLiquidacion"= c("2023-06-01","2023-06-12", "2023-06-14"), 
+  "MontoSubastado"= c(7400, 8000, 2400), 
+  "MontoDemandado"= c(2000, 1500, 2222), 
+  "MontoAdjudicado"= c(1800, 1499, 2200), 
+  "RendimientoPPA"= c(0.05, 0.0555, 0.087)
+)
+##No puedo realizar la concatenacion porque el nombre de las columnas no es igual
+rbind(letras_bc, nuevas_letras)
+
+##Columnas que no hacen match
+setdiff(colnames(letras_bc), colnames(nuevas_letras))
+##Columnas que si hacen match
+intersect(colnames(letras_bc), colnames(nuevas_letras))
+
+##Dado este analisis modificoo el nombre de la columna para poder realizar la concatenacion
+colnames(nuevas_letras)[1] <- "FechadeSubasta"
+letras_bc_actualizado <- rbind(letras_bc, nuevas_letras) ##Procedo a realizar la concatenacion sin temas
+
+##Verifico que realmente se realizo la concatenacion
+cantidad_registros_nuevos <- nrow(letras_bc_actualizado) - nrow(letras_bc)
+cantidad_registros_nuevos
+tail(letras_bc_actualizado) ##Veo mi dataset
+
+
+
+
+
+
+
+
+
+
+
 
 
 

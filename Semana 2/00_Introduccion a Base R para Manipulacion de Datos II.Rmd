@@ -8,16 +8,62 @@ date: "2023-05-13"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Diferencia entre Vectores
+
+Ya que sabemos manipular los nombres de las columnas de los dataframes, es importante conocer las funciones `setdiff()` e `intersect()` de R. Estas nos ayudaran a determinar si las columnas de dos dataframes son tienen nombres similares para poder realizar una concatenacion o nos diran si existe una columna por la cual se pueda hacer un join.
+
+```{r}
+##Leemos la tabla de letras
+letras_bc <- read.table("Semana 2/data/letras_bc_consolidado_clean.csv")
+
+##Creamos un nuevo dataframe
+nuevas_letras <- data.frame( 
+  "FechaSubasta"= c("2023-06-01","2023-06-12", "2023-06-14"), 
+  "FechaLiquidacion"= c("2023-06-01","2023-06-12", "2023-06-14"), 
+  "MontoSubastado"= c(7400, 8000, 2400), 
+  "MontoDemandado"= c(2000, 1500, 2222), 
+  "MontoAdjudicado"= c(1800, 1499, 2200), 
+  "RendimientoPPA"= c(0.05, 0.0555, 0.087)
+  )
+
+##Columnas que no hacen match
+setdiff(colnames(letras_bc), colnames(nuevas_letras))
+##Columnas que si hacen match
+intersect(colnames(letras_bc), colnames(nuevas_letras))
+```
+
 ## Concatenación
 
 En R, `rbind()` y `cbind()` son funciones que se utilizan para combinar matrices, dataframes o vectores en una sola estructura.
 
 rbind(): se utiliza para unir dos o más objetos por filas, es decir, apilarlos verticalmente. La función rbind() espera que los objetos tengan el mismo número de columnas, ya que agrega las filas debajo de la última fila de cada objeto.
 
-cbind(): se utiliza para unir dos o más objetos por columnas, es decir, agregarlos horizontalmente. La función cbind() espera que los objetos tengan el mismo número de filas, ya que agrega las columnas a la derecha de la última columna de cada objeto.
-
 ```{r}
 
+##No puedo realizar la concatenacion porque el nombre de las columnas no es igual
+rbind(letras_bc, nuevas_letras)
+
+##Dado este analisis  de diferencias de columnas modificoo el nombre de la columna para poder realizar la concatenacion
+colnames(nuevas_letras)[1] <- "FechadeSubasta"
+letras_bc_actualizado <- rbind(letras_bc, nuevas_letras) ##Procedo a realizar la concatenacion sin temas
+
+##Verifico que realmente se realizo la concatenacion
+cantidad_registros_nuevos <- nrow(letras_bc_actualizado) - nrow(letras_bc)
+cantidad_registros_nuevos
+tail(letras_bc_actualizado) ##Veo mi dataset
+
+```
+
+cbind(): se utiliza para unir dos o más objetos por columnas, es decir, agregarlos horizontalmente. La función cbind() espera que los objetos tengan el mismo número de filas, ya que agrega las columnas a la derecha de la última columna de cada objeto.
+
+
+```{r}
+# Create two data frames
+df1 <- data.frame(A = c(1, 2, 3), B = c(4, 5, 6))
+df2 <- data.frame(C = c(7, 8, 9), D = c(10, 11, 12))
+
+# Combine data frames column-wise
+cbind(df1, df2)
 
 ```
 
