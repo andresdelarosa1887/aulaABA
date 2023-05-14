@@ -50,15 +50,20 @@ cantidad_registros_nuevos
 tail(letras_bc_actualizado) ##Veo mi dataset
 
 
+##Uniones
+##Creamos un dataframe para unir con las letras del BC 
 
+##Creamos una columna de FechaSubasta utilizando una secuencia de fechas de la fecha minima de subasta de nuestro dataframe original hasta la fecha maxima por dia
+##Creamos una segunda columna que aleatoriamente nos dira 1 si fue declarado desierto y 0 si no fue declarada desierta
+subasta_desierta <- data.frame(
+  "FechadeSubasta" = seq(as.Date(min(letras_bc$FechadeSubasta)),as.Date(max(letras_bc$FechadeSubasta)), by="day" ), 
+  "DeclaradaDesiesta"= sample(c(1,0),length(seq(as.Date(min(letras_bc$FechadeSubasta)),as.Date(max(letras_bc$FechadeSubasta)), by="day" )), TRUE)
+)
 
-
-
-
-
-
-
-
+##Este nuevo dataframe lo queremos unir con las letras del BC. Esta union lo hacemos por la FechadeSubasta
+letras_bc$FechadeSubasta <- as.Date(letras_bc$FechadeSubasta)
+merged_letras_bc <- merge(letras_bc, subasta_desierta, all.x= TRUE, all.y=FALSE)
+head(merged_letras_bc)
 
 
 

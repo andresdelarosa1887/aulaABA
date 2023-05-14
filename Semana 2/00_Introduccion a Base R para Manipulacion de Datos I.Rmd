@@ -1,6 +1,8 @@
 ---
 title: "Introducción a Base R para Manipulación de Datos I"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 date: "2023-05-13"
 ---
 
@@ -8,7 +10,7 @@ date: "2023-05-13"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Importacion de datos
+## Importación de datos
 
 En esta sección utilizaremos las letras del Banco Central de la República Dominicana, el archivo tiene los Montos Colocados y Tasa de Rendimiento Promedio Ponderada 2007-2023
 
@@ -20,7 +22,7 @@ La función `read.table()` en R se utiliza para importar datos tabulares desde u
 
 ```{r}
 ##Leemos la tabla de letras
-letras_bc <- read.table("Semana 2/data/letras_bc_consolidado_clean.csv")
+letras_bc <- read.table("data/letras_bc_consolidado_clean.csv")
 ```
 
 ## Slicing
@@ -75,10 +77,12 @@ La función `colnames()` permite cambiar los nombres de las columnas de un dataf
 
 ```{r}
 colnames(letras_bc)[1:3] <- c("FechaLiquidacion", "FechaSubasta", "Monto")
+head(letras_bc)
 ```
 
 La función `names()` permite cambiar los nombres de las columnas de un dataframe, de la misma manera que la función colnames(). La única diferencia es que names() es más genérica y también se puede utilizar para cambiar los nombres de las filas de una matriz.
 
 ```{r}
 names(letras_bc)[1:3] <- c("FechaSubasta", "FechaLiquidacion", "MontoSubastado")
+head(letras_bc)
 ```

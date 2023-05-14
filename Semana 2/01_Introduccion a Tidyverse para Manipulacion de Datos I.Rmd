@@ -1,6 +1,8 @@
 ---
 title: "Introducción a Tidyverse para Manipulación de Datos I"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-13"
 ---
 
@@ -8,67 +10,82 @@ date: "2023-05-13"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-
 ## Seleccionar columnas
 
 `select()`: Se utiliza para seleccionar columnas específicas de un data frame.
 
 ```{r}
-##Uso de subset
-# subset(dataframe, condicion)
 
-##Indexacion de expresiones logicas
+##Importar la libreria tidyverse y lubridate para manipulacion de fechas 
+library(tidyverse)
+library(lubridate)
+
+##Importacion de datos
+letras_bc <- read.table("data/letras_bc_consolidado_clean.csv")
+
+##Seleccionando Columnas
+letras_bc_selected_cols <- letras_bc |>
+  select(FechadeSubasta, FechaLiquidacion, MontoAdjudicado)
+glimpse(letras_bc)
 ```
 
+## Filtering
 
-## Filtering 
 `filter()`: Permite filtrar filas de un data frame en base a una condición.
 
 ```{r}
+##Filtrando datasets 
+letras_monto_subastado_5000 <- letras_bc |>
+  select(FechadeSubasta, FechaLiquidacion, MontoAdjudicado) |> 
+  filter(MontoAdjudicado==5000)
 
+glimpse(letras_monto_subastado_5000)
 
 ```
-
 
 ## Modificación de columnas (mutate)
 
 `mutate():` Permite agregar nuevas columnas a un data frame o modificar las existentes.
 
-
 ```{r}
+letras_monto_subastado_5000 <- letras_bc |>
+  select(FechadeSubasta, FechaLiquidacion, MontoAdjudicado,RendimientoPPA) |> 
+  filter(MontoAdjudicado==5000) %>% 
+  mutate(RendimientoPPA= RendimientoPPA*100, 
+         RendimientoPPA= 1-RendimientoPPA
+         )
 
-
-
+glimpse(letras_monto_subastado_5000)
 ```
 
-`group_by():` Agrupa las filas de un data frame por una o más columnas, lo que permite realizar operaciones sobre cada grupo por separado
+-   `group_by():` Agrupa las filas de un data frame por una o más columnas, lo que permite realizar operaciones sobre cada grupo por separado
 
-
-```{r}
-
-
-
-```
-
-
-`summarise():` Permite resumir los datos de un data frame, calculando estadísticas descriptivas o aplicando funciones personalizadas.
-
+-   `summarise():` Permite resumir los datos de un data frame, calculando estadísticas descriptivas o aplicando funciones personalizadas.
 
 ```{r}
-
-
+letras_bc |>
+  select(FechadeSubasta, MontoDemandado, RendimientoPPA) |> 
+  filter(FechadeSubasta> as.Date('2022-12-31')) |>
+  mutate(mesFechaSubasta= month(FechadeSubasta)) |>
+  group_by(mesFechaSubasta) |>
+  summarise( 
+    PromedioTasa= mean(RendimientoPPA), 
+    TotalSubastado= sum(MontoDemandado)) |> 
+  arrange(mesFechaSubasta)
 
 ```
-
 
 `arrange():` Ordena las filas de un data frame en base a una o más columnas.
 
-
-
 ```{r}
-
-
+letras_bc |>
+  select(FechadeSubasta, MontoDemandado, RendimientoPPA) |> 
+  filter(FechadeSubasta> as.Date('2022-12-31')) |>
+  mutate(mesFechaSubasta= month(FechadeSubasta)) |>
+  group_by(mesFechaSubasta) |>
+  summarise( 
+    PromedioTasa= mean(RendimientoPPA), 
+    TotalSubastado= sum(MontoDemandado)) |> 
+  arrange(desc(mesFechaSubasta))
 
 ```
-
