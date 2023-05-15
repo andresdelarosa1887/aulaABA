@@ -24,7 +24,7 @@ letras_monto_subastado_5000 <- letras_bc |>
   filter(MontoAdjudicado==5000) %>% 
   mutate(RendimientoPPA= RendimientoPPA*100, 
          RendimientoPPA= RendimientoPPA*100
-         )
+  )
 
 glimpse(letras_monto_subastado_500)
 
