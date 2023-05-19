@@ -1,0 +1,97 @@
+---
+title: "Importacion de Datos en R"
+output: html_document
+date: "2023-05-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importacion desde la web el tipo de cambio diario
+
+```{r}
+TipodeCambioURL <- "https://cdn.bancentral.gov.do/documents/estadisticas/mercado-cambiario/documents/TASAS_CONVERTIBLES_OTRAS_MONEDAS.xlsx?v=1662073856117"
+suppressMessages(GET(TipodeCambioURL, write_disk(tf <- tempfile(fileext = ".xlsx"))))
+TipodeCambio <- suppressMessages(read_excel(tf))
+
+```
+
+## Importacion desde la web en un pdf
+
+You can also embed plots, for example:
+
+```{r}
+# Obtener PDF
+
+##Posibles librerias a utilizar
+suppressPackageStartupMessages(library(openxlsx))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(scales))
+suppressPackageStartupMessages(library(stringr))
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(zoo))
+suppressPackageStartupMessages(library(odbc))
+suppressPackageStartupMessages(library(DBI))
+suppressPackageStartupMessages(library(httr))
+suppressPackageStartupMessages(library(readxl))
+suppressPackageStartupMessages(library(data.table))
+suppressPackageStartupMessages(library(pdftools))
+suppressPackageStartupMessages(library(stringi))
+
+URL <- {
+  "https://cdn.bancentral.gov.do/documents/instrumentos-de-inversion/instrumentos-operaciones-de-mercado-abierto/documents/Resultados_Contraccion_Expansion.pdf?v=1648831730568"
+}
+PDF_Contraccion <- pdf_text(URL) %>% str_split("\n")
+
+## Borrar primeras 21 lineas
+for (i in 1:7) {
+  PDF_Contraccion[[i]] <- PDF_Contraccion[[i]][-1:-21]
+}
+
+```
+
+## Importacion desde una API- Estados de situacion de la Superintendecia de Bancos
+
+```{r}
+## Cargar funcion sb_get
+sb_get <- function(base_url = "https://apis.sb.gob.do/estadisticas", 
+                   end_point, periodo_inicial, tipo_entidad = NULL, entidad = NULL){
+  
+  ## Api Key SB
+  api_key <- "b0f966428bde45dc913ffd59d88b9dc0"
+  
+  ## Definir url & endpoint
+  base_url <- base_url
+  end_point <- end_point
+  
+  ## Get json
+  df <- GET(paste0(base_url, end_point),
+            add_headers("Ocp-Apim-Subscription-Key" = api_key),
+            query = list(
+              periodoInicial = periodo_inicial,
+              tipoEntidad = tipo_entidad,
+              entidad = entidad),
+            encode = "json")
+  # print(df)
+  
+  ## Parse json
+  df <- content(df, as = "text", encoding = "UTF-8")
+  df <- fromJSON(df)
+  
+  ## JSON to dataframe
+  df <- as.data.frame(df$data)
+  
+  return(df)
+}
+
+### Cargar datos
+estados_situacion <- sb_get("https://apis.sb.gob.do/estadisticas", 
+                            "/estados/situacion/eif", "2016-01", "BM")
+```
+
+## Importacion desde un paquete en R
+
+```{r}
+
+```
