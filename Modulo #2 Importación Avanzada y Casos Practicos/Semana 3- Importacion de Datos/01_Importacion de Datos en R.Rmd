@@ -10,7 +10,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Importacion desde la web el tipo de cambio diario
 
+Primero utilizamos el paquete httr que nos permite buscar los archivos que se encuentran en la web. Para hacer un request utilizamos la funcion `GET`. La misma nos da un objeto de respuesta, el estatus, el tipo y el tamaño del archivo.
+
+En este caso nos da un excel con el tipo de cambio diario para todas las monedas del BCRD.
+
+Para leer el excel y convertirlo en un dataframe utilizamos la funcion `read_excel` del paquete readxl.
+
 ```{r}
+suppressPackageStartupMessages(library(httr))
+suppressPackageStartupMessages(library(readxl))
+
 TipodeCambioURL <- "https://cdn.bancentral.gov.do/documents/estadisticas/mercado-cambiario/documents/TASAS_CONVERTIBLES_OTRAS_MONEDAS.xlsx?v=1662073856117"
 suppressMessages(GET(TipodeCambioURL, write_disk(tf <- tempfile(fileext = ".xlsx"))))
 TipodeCambio <- suppressMessages(read_excel(tf))
@@ -19,47 +28,35 @@ TipodeCambio <- suppressMessages(read_excel(tf))
 
 ## Importacion desde la web en un pdf
 
-You can also embed plots, for example:
+De la misma manera que obtuvimos un excel, podemos obtener un PDF. En este caso con el paquete pdftools. Aqui usamos el paquete stringr para manipular el texto dentro del PDF.
 
 ```{r}
 # Obtener PDF
 
 ##Posibles librerias a utilizar
-suppressPackageStartupMessages(library(openxlsx))
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(scales))
-suppressPackageStartupMessages(library(stringr))
-suppressPackageStartupMessages(library(lubridate))
-suppressPackageStartupMessages(library(zoo))
-suppressPackageStartupMessages(library(odbc))
-suppressPackageStartupMessages(library(DBI))
 suppressPackageStartupMessages(library(httr))
-suppressPackageStartupMessages(library(readxl))
-suppressPackageStartupMessages(library(data.table))
 suppressPackageStartupMessages(library(pdftools))
-suppressPackageStartupMessages(library(stringi))
+suppressPackageStartupMessages(library(dplyr))
+suppressPackageStartupMessages(library(stringr))
 
 URL <- {
   "https://cdn.bancentral.gov.do/documents/instrumentos-de-inversion/instrumentos-operaciones-de-mercado-abierto/documents/Resultados_Contraccion_Expansion.pdf?v=1648831730568"
 }
 PDF_Contraccion <- pdf_text(URL) %>% str_split("\n")
-
-## Borrar primeras 21 lineas
-for (i in 1:7) {
-  PDF_Contraccion[[i]] <- PDF_Contraccion[[i]][-1:-21]
-}
-
+##Visualizamos una fila dentro de la lista que obtuvimos
+PDF_Contraccion[[5]][10]
 ```
 
 ## Importacion desde una API- Estados de situacion de la Superintendecia de Bancos
 
 ```{r}
+library(jsonlite)
 ## Cargar funcion sb_get
 sb_get <- function(base_url = "https://apis.sb.gob.do/estadisticas", 
                    end_point, periodo_inicial, tipo_entidad = NULL, entidad = NULL){
   
   ## Api Key SB
-  api_key <- "b0f966428bde45dc913ffd59d88b9dc0"
+  api_key <- "377833a9f00844b0975025d5f2d2c544"
   
   ## Definir url & endpoint
   base_url <- base_url
@@ -90,8 +87,8 @@ estados_situacion <- sb_get("https://apis.sb.gob.do/estadisticas",
                             "/estados/situacion/eif", "2016-01", "BM")
 ```
 
-## Importacion desde un paquete en R
-
 ```{r}
-
+head(estados_situacion)
 ```
+
+## 

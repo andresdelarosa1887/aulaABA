@@ -1,0 +1,52 @@
+---
+title: "Importacion de Datos en R"
+output: html_document
+date: "2023-05-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Enlistar Archivos (list.files())
+
+La función list.files() es una herramienta versátil y práctica que te permite navegar sin esfuerzo a través de directorios, recuperar nombres de archivos y realizar diversas operaciones relacionadas con archivos.
+
+Estos son los argumentos de la función:
+
+-   `path` es un vector de caracteres que especifica el directorio a listar. Si no se especifica ningún path, se utilizará el directorio de trabajo actual.
+
+-   `all.files` es un valor lógico que especifica si se deben listar todos los archivos, incluyendo los archivos ocultos. El valor predeterminado es FALSE, que solo lista los archivos visibles.
+
+-   `full.names` es un valor lógico que especifica si se deben devolver las rutas completas de los archivos. El valor predeterminado es FALSE, que solo devuelve los nombres de archivo.
+
+-   `recursive` es un valor lógico que especifica si se deben buscar subdirectorios. El valor predeterminado es FALSE, que solo lista los archivos en el directorio especificado.
+
+-   `pattern` es una expresión regular que se puede utilizar para filtrar los archivos que se listan. Si no se especifica ningún patrón, se listan todos los archivos.
+
+```{r}
+list.files(
+  path, 
+  all.files = FALSE, 
+  full.names = FALSE, 
+  recursive = FALSE, 
+  pattern = NULL
+) 
+```
+
+## Especificando un Directorio
+
+```{r}
+directory <- "../rtip-2022-10-24/"
+file_names <- list.files(path = directory)
+print(file_names)
+```
+
+## Seleccionando Archivos con un Patrón
+
+```{r}
+# List only files with a specific extension
+pattern <- "\\.txt$"
+file_names <- list.files(pattern = pattern)
+print(file_names)
+```
