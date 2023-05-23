@@ -1,0 +1,40 @@
+---
+title: "00_ETL Letras BC"
+output: html_document
+date: "2023-05-22"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Importamos la libreria y los datos ya descargados localmente del BC
+
+```{r}
+library(readxl)
+library(stringr)
+library(lubridate) ##para utilizar la funcion year
+
+##Montos Colocados y Tasa de Rendimiento Promedio Ponderada 2007-2023
+letras_bc_consolidado_raw <- suppressMessages(suppressWarnings(read_excel("data/letras_bc_consolidado_raw.xlsx")))
+```
+
+## 
+
+You can also embed plots, for example:
+
+```{r}
+
+letras_bc_consolidado_raw <- letras_bc_consolidado_raw[5:nrow(letras_bc_consolidado_raw), 2:7]
+colnames(letras_bc_consolidado_raw) <- c("FechadeSubasta", 
+                                         "FechaLiquidacion",
+                                         "MontoSubastado", 
+                                         "MontoDemandado",
+                                         "MontoAdjudicado", 
+                                         "RendimientoPPA")
+
+letras_bc_consolidado_raw <- na.omit(letras_bc_consolidado_raw)
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
