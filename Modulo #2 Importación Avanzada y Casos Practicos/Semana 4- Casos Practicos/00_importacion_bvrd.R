@@ -1,5 +1,4 @@
 
-
 ##Importacion desde la WEB de un Excel
 library(httr)
 library(readxl)
@@ -41,37 +40,29 @@ data_fechas$dia <- ifelse(nchar(day(data_fechas$secuencia_fechas)) != 2,
 
 
 
-
 for (mes in levels(as.factor((data_fechas$mes)))) {
   print(mes)
   dias <- data_fechas[data_fechas$mes== mes,]$dia
   for (dia in dias){ 
     consolidadoBVRDLink <- paste0("https://bvrd.com.do/boletines/boletin-bvrd-consolidado-excel-",dia,"-",mes,"-","23/")
     GET(consolidadoBVRDLink, write_disk(tf <- tempfile(fileext = ".xlsx")), add_headers(`Connection` = "keep-alive", `User-Agent` = UA))
-  
     ##Instrumentos de Renta Variable
     ##Renta Variable, Emisiones Corporativas Vigentes
     emisionescorp_vigentes_rv <- read_excel(tf, sheet =  "BB_RVEmisionesCorpV")
     write_rds(emisionescorp_vigentes_rv, paste0("data/", dia,"-",mes,"-","23-","emisionescorp_vigentes_rv.rds"))
-    
     ##Renta Variable, Mercado Secundario Operaciones del día
     operaciones_diarias_rv <- read_excel(tf, sheet =  "BB_RVMSOperDia")
     write_rds(operaciones_diarias_rv, paste0("data/", dia,"-",mes,"-","23-","operaciones_diarias_rv.rds"))
-    
     ##Renta Variable, Mercado Secundario los 15 Títulos más Transados en el Mes
     topmensual_rv <- read_excel(tf, sheet =  "BB_RVMSTopTitTransMes")
     write_rds(topmensual_rv, paste0("data/", dia,"-",mes,"-","23-","topmensual_rv.rds"))
-    
-    
     ##Instrumentos de renta fija
     ##Renta Fija, Emisiones Corporativas Vigentes
     emisionescorp_vigentes_rf <- read_excel(tf, sheet =  "BB_RFEmisionesCorpV")
     write_rds(emisionescorp_vigentes_rf, paste0("data/", dia,"-",mes,"-","23-","emisionescorp_vigentes_rf.rds"))
-    
     ##Renta Fija, Mercado Secundario Operaciones del día
     operaciones_diarias_rf <- read_excel(tf, sheet =  "BB_RFMSOperDia")
     write_rds(operaciones_diarias_rf, paste0("data/", dia,"-",mes,"-","23-","operaciones_diarias_rf.rds"))
-    
     ##Renta Fija, Mercado Secundario los 15 Títulos más Transados en el Mes
     topmensual_rf <- read_excel(tf, sheet =  "BB_RFMSTopTitTransMes")
     write_rds(topmensual_rf, paste0("data/", dia,"-",mes,"-","23-","topmensual_rf.rds"))
