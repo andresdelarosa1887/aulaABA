@@ -6,6 +6,7 @@ library(tidyverse)
 
 
 ##Creacion de fechas para el loop
+
 inicio_fecha = as.Date("2023-01-01")
 final_fecha = Sys.Date()
 

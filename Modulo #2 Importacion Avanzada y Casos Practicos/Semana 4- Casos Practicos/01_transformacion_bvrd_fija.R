@@ -1,11 +1,8 @@
 
-
-
 ##Importacion desde la WEB de un Excel
 library(httr)
 library(readxl)
 library(tidyverse)
-
 
 ################## Operaciones diarias de renta fija ################## 
 limpieza_operaciones_diarias <- function(archivo_operaciones_diarias, fecha_operacion){
@@ -39,6 +36,7 @@ for (archivo in list.files("data/", pattern = "operaciones_diarias_rf")){
 listado_operaciones_diarias = do.call(rbind, listado_operaciones_diarias)
 
 rownames(listado_operaciones_diarias) <- NULL
+write_rds(listado_operaciones_diarias, "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
 
 ##################  Renta Fija, Emisiones Corporativas Vigentes ################## 
 limpieza_emisiones_corporativasvig <- function(archivo_emisiones_vigentes, fecha_operacion){
@@ -73,12 +71,10 @@ for (archivo in list.files("data/", pattern="emisionescorp_vigentes_rf")){
 listado_emisiones_corp_vigentes = do.call(rbind, listado_emisiones_corp_vigentes)
 rownames(listado_emisiones_corp_vigentes) <- NULL
 
-
-
+write_rds(listado_emisiones_corp_vigentes, "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/emisiones_corp_vigentes_rf.rds")
 
 
 ##################  Renta Fija, Mercado Secundario los 15 Títulos más Transados en el Mes ################## 
-list.files("data/", pattern="topmensual_rf")
 
 limpieza_titulos_rf_15 <- function(archivo_top_15_titulos, fecha_operacion){
   top_15_titulos <- readRDS(paste0("data/", archivo_top_15_titulos))
@@ -115,6 +111,7 @@ listado_titulos_rf_15 = do.call(rbind, listado_titulos_rf_15)
 
 rownames(listado_titulos_rf_15) <- NULL
 
+write_rds(listado_titulos_rf_15, "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/titulos_rf_15.rds")
 
 
 
