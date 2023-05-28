@@ -21,8 +21,6 @@ data_barras <- opdiarias_rf |>
   summarise(cantidad_titulos= n_distinct(codigo)) |>
   filter(semana != 21)
 
-
-# Creando los titulos 
 titulo <- "Cantidad de Titulos Distintos Transados por Semana en 2023"
 subtitulo <- paste("De", min(opdiarias_rf$fecha_operacion), "a", max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion))
 x_label <- "Semana del 2023"
@@ -32,7 +30,7 @@ promedio_titulos <- mean(data_barras$cantidad_titulos)
 # Creando el grafico
 titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana), y = cantidad_titulos)) +
   geom_bar(stat = "identity", fill = "grey") +
-  labs(title = chart_title,
+  labs(title = titulo,
        subtitle = subtitulo, 
        x = x_label,
        y = y_label)  +
@@ -43,8 +41,11 @@ titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana), y = cantidad
 theme_classic()
 
 plot(titulos_semanales)
-##Titulos mas transados
 
+
+
+
+##Cantidad de dias en los que se transo 
 titulos_dias_transados <- opdiarias_rf |> 
   select(fecha_operacion, 
          "codigo"= `Cód. Local`, 
@@ -52,31 +53,24 @@ titulos_dias_transados <- opdiarias_rf |>
   filter(fecha_operacion < as.Date("2023-05-22")) |>
   group_by(codigo) |> 
   summarise(dias_transado= n_distinct(fecha_operacion)) %>% 
-  arrange(desc(dias_transado)) %>% 
-  filter(dias_transado >1 )
+  # arrange(desc(dias_transado)) %>% 
+  filter(dias_transado > 6 ) %>% 
+  mutate(codigo = fct_reorder(codigo, dias_transado))
 
-titulos_dias_transados <- titulos_dias_transados[order(-titulos_dias_transados$dias_transado), ]
+
 
 titulos_dias_trans_chart <- ggplot(titulos_dias_transados, aes(y =dias_transado,
                                                         x = codigo)) +
   geom_bar(stat = "identity", fill = "grey") +
-  labs(title = chart_title,
-       subtitle = subtitulo, 
-       x = x_label,
-       y = y_label)  +
+  labs(title = "Número de días en los que el instrumento de renta fija fue transado",
+       subtitle =  paste("De", min(opdiarias_rf$fecha_operacion), "a", max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion)), 
+       y = "Número de días",
+       x = "Cod. Local")  +
   geom_text(aes(label = dias_transado),
-            vjust = -0.5, 
-            color = "black") +
+            vjust = 0.5, 
+            color = "black",
+            size= 3) +
   coord_flip() +
-  #geom_hline(yintercept = promedio_titulos, linetype = "dashed", color = "red", linewidth = 0.5) +
   theme_classic()
 
 plot(titulos_dias_trans_chart)
-## Historico de precio de un instrumento especifico + Cantidad de transacciones (Grafico de linea)
-
-
-##  La relacion entre el precio la cantidad e coutas transadas 
-# para renta variable y la relacion entre el precio y la tasa de cupon para la renta fija
-
-##  Relacion entre el precio y la cantidad de cuotas transadas (Grafico de dispersion)
-## Relacion entre el precio y la tasa de cupon de un instrumento financiero
