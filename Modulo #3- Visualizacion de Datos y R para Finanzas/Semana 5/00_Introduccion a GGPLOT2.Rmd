@@ -101,7 +101,6 @@ Por el contrario, cuando la tasa de cupón de un bono es menor que la tasa de in
 
 En resumen, si la tasa de cupón de un bono aumenta, su precio tiende a disminuir, y si la tasa de cupón disminuye, su precio tiende a aumentar. Esto se debe a que los inversores comparan la tasa de cupón del bono con las tasas de interés actuales del mercado y ajustan el precio del bono en consecuencia para obtener un rendimiento adecuado en comparación con otras oportunidades de inversión.
 
-
 ## Grafico de Dispersion- Instrumentos de Renta Fija (precio de un bono y los días al vencimiento )
 
 La relación entre el precio de un bono y los días al vencimiento del mismo se basa en el concepto de la sensibilidad de los bonos al tiempo, conocida como duración.

@@ -29,7 +29,7 @@ promedio_titulos <- mean(data_barras$cantidad_titulos)
 
 # Creando el grafico
 titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana), y = cantidad_titulos)) +
-  geom_bar(stat = "identity", fill = "grey") +
+  geom_bar(stat = "identity", fill = "grey") + 
   labs(title = titulo,
        subtitle = subtitulo, 
        x = x_label,
