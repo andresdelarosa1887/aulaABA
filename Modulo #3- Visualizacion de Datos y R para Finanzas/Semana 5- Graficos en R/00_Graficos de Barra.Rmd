@@ -1,0 +1,68 @@
+---
+title: "Graficos de Barra - Geom Bar"
+output: html_document
+date: "2023-05-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Graficos de Barra - Geom Bar
+
+La función **`geom_bar()`** en ggplot2 tiene varios argumentos que puedes utilizar para personalizar la apariencia y el comportamiento del gráfico de barras. Aquí tienes algunos de los argumentos más comúnmente utilizados:
+
+-   **`stat`**: Este argumento determina cómo se calcula la altura de las barras. De manera predeterminada, se establece en **`"count"`**, lo que crea una barra para cada valor único de la variable x y calcula la altura como el recuento de observaciones en cada categoría. También puedes establecerlo en **`"identity"`** para utilizar los valores reales de y especificados en los datos.
+
+-   **`position`**: Este argumento determina la posición de las barras. De manera predeterminada, se establece en **`"stack"`**, lo que apila las barras una encima de la otra. Otras opciones incluyen **`"dodge"`** (las barras se colocan una al lado de la otra) y **`"fill"`** (las barras se llenan hasta la parte superior).
+
+-   **`width`**: Este argumento te permite controlar el ancho de las barras. Puedes especificar un valor fijo de ancho (por ejemplo, **`width = 0.5`**) o utilizar una función (por ejemplo, **`width = position_dodge(0.9)`**) para ajustar el ancho según la posición de las barras.
+
+-   **`fill`**: Este argumento establece el color de relleno de las barras. Puedes especificar un color único (por ejemplo, **`fill = "steelblue"`**) o asignarlo a una variable en los datos para crear barras de diferentes colores según las categorías (por ejemplo, **`fill = categoria`**).
+
+-   **`color`**: Este argumento establece el color del borde de las barras. Al igual que con **`fill`**, puedes especificar un color único o asignarlo a una variable en los datos.
+
+-   **`alpha`**: Este argumento controla la transparencia de las barras. Acepta un valor entre 0 (completamente transparente) y 1 (completamente opaco).
+
+-   **`...`**: Este argumento de puntos suspensivos te permite pasar parámetros gráficos adicionales para personalizar la apariencia de las barras, como **`size`**, **`linetype`** o **`position`**.
+
+Estos son solo algunos de los argumentos más comúnmente utilizados de **`geom_bar()`**. Puedes encontrar más detalles y opciones adicionales en la documentación oficial de ggplot2: [**https://ggplot2.tidyverse.org/reference/geom_bar.html**](https://ggplot2.tidyverse.org/reference/geom_bar.html)
+
+```{r}
+opdiarias_rf <- readRDS("../../Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
+
+data_barras <- opdiarias_rf |> 
+  select(fecha_operacion, 
+         "codigo"= `Cód. Local`, 
+         ) %>% 
+  mutate(mes= month(fecha_operacion), 
+         dia= day(fecha_operacion), 
+         semana= week(fecha_operacion)) |> 
+  select(semana, codigo) |> 
+  group_by(semana) |> 
+  summarise(cantidad_titulos= n_distinct(codigo)) |>
+  filter(semana != 21)
+
+titulo <- "Cantidad de Titulos Distintos Transados por Semana en 2023"
+subtitulo <- paste("De", min(opdiarias_rf$fecha_operacion), "a", max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion))
+x_label <- "Semana del 2023"
+y_label <- "Cantidad de Titulos Distintos Transados"
+promedio_titulos <- mean(data_barras$cantidad_titulos)
+
+# Creando el grafico
+titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana), y = cantidad_titulos)) +
+  geom_bar(stat = "identity", fill = "grey") + 
+  labs(title = titulo,
+       subtitle = subtitulo, 
+       x = x_label,
+       y = y_label)  +
+    geom_text(aes(label = cantidad_titulos),
+              vjust = -0.5, 
+              color = "black") + 
+  geom_hline(yintercept = promedio_titulos, linetype = "dashed", color = "red", linewidth = 0.5) +
+theme_classic()
+
+plot(titulos_semanales)
+
+```

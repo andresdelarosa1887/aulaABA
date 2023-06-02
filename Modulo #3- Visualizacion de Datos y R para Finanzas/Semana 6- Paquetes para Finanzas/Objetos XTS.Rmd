@@ -1,0 +1,69 @@
+---
+title: "00_Objetos XTS"
+output: html_document
+date: "2023-06-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Objeto XTS
+
+En R, un objeto "xts" (eXtensible Time Series) es una estructura de datos especializada utilizada para el manejo y análisis de series de tiempo. El paquete "xts" proporciona una clase de objeto homónima que extiende la funcionalidad de los objetos "zoo" (Z's Ordered Observations) y agrega capacidades específicas para el tratamiento de datos temporales.
+
+Un objeto "xts" almacena datos en una matriz bidimensional, donde una dimensión representa las observaciones en el tiempo y la otra dimensión representa las variables o columnas de datos. Los objetos "xts" están diseñados para trabajar con datos que tienen una dimensión temporal, como series financieras, cotizaciones bursátiles, datos climáticos, entre otros.
+
+Las características clave de los objetos "xts" incluyen:
+
+-   Almacenamiento ordenado en el tiempo: Los datos en un objeto "xts" están ordenados secuencialmente en función de su dimensión temporal. Esto permite un acceso rápido y eficiente a los datos en función de la posición temporal.
+
+-   Soporte para marcas de tiempo: Los objetos "xts" pueden contener marcas de tiempo precisas asociadas con cada observación. Esto facilita el cálculo y análisis basados en el tiempo, como la agregación por intervalos, la interpolación temporal y el alineamiento de series de tiempo.
+
+-   Funcionalidad de índice de tiempo: Los objetos "xts" proporcionan métodos y funciones específicas para realizar operaciones basadas en el índice de tiempo, como subconjuntos de datos por fechas, manipulación de intervalos de tiempo y cálculos de frecuencia.
+
+-   Compatibilidad con funciones de análisis de series de tiempo: Los objetos "xts" se integran bien con paquetes y funciones populares de análisis de series de tiempo en R, como "quantmod", "forecast", "TTR" (Technical Trading Rules), entre otros. Esto facilita el análisis, la modelización y la visualización de datos temporales.
+
+    En resumen, los objetos "xts" en R proporcionan una estructura de datos eficiente y especializada para el manejo y análisis de series de tiempo. Su diseño optimizado para datos temporales y su integración con otras herramientas de análisis de series de tiempo hacen que sean una opción poderosa para trabajar con datos temporales en R.
+
+```{r}
+library(xts)
+library(tidyverse)
+library(lubridate)
+
+opdiarias_rv <- readRDS("Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
+opdiarias_rv <- na.omit(opdiarias_rv)
+
+un_instrumento_frecuente <- opdiarias_rv %>%select("codigo_local"= `Cód. Local`,
+                                                   fecha_operacion
+) %>% group_by(codigo_local) %>% 
+  summarise(total_dias= n_distinct(fecha_operacion)) 
+
+opdiarias_xts <- opdiarias_rv %>% 
+  select("codigo_local"= `Cód. Local`, Precio,  fecha_operacion) %>% 
+  filter(codigo_local %in% c("CP1EX201", "CP1JF201")) 
+ 
+opdiarias_xts <-  unique(opdiarias_xts)
+
+CP1EX201 <- opdiarias_xts %>% filter(codigo_local %in% c("CP1EX201")) %>% 
+  select(fecha_operacion, Precio) %>% 
+  mutate(fecha_operacion= as.Date(fecha_operacion), 
+         Precio= as.numeric(Precio)) %>% 
+  group_by(fecha_operacion) %>% 
+  summarise(Open= mean(Precio, na.rm= TRUE),
+            High= max(Precio), 
+            Low= min(Precio), 
+            Close= mean(Precio, na.rm= TRUE))
+
+CP1EX201 <- xts(CP1EX201$High, order.by= CP1EX201$fecha_operacion)
+colnames(CP1EX201)[1] <- "CP1EX201"
+```
+
+-   `as.xts()`: Convierte un objeto de datos en un objeto "xts". Esta función es útil cuando se trabaja con datos en otros formatos y se desea convertirlos a un formato compatible con "xts".
+-   `index()`: Devuelve el índice de tiempo de un objeto "xts". Puede utilizarse para acceder y manipular las marcas de tiempo asociadas con cada observación en el objeto "xts".
+-   `coredata()`: Extrae los datos de un objeto "xts" en forma de matriz o vector. Esto permite acceder directamente a los valores numéricos de la serie de tiempo sin incluir las marcas de tiempo.
+-   `timeBasedSeq()`: Genera una secuencia de marcas de tiempo basada en un intervalo de tiempo específico. Esta función es útil cuando se necesita crear marcas de tiempo de manera rápida y conveniente.
+-   `merge()`: Combina varios objetos "xts" en uno solo, fusionando los datos correspondientes a las marcas de tiempo comunes. Es útil cuando se tienen múltiples series de tiempo que se desean unificar.
+-   `apply.\*()` (por ejemplo, `apply.daily()`, `apply.weekly()`, `apply.monthly()`): Aplica una función a intervalos de tiempo específicos en un objeto "xts". Estas funciones permiten realizar cálculos agregados o aplicar funciones personalizadas en intervalos de tiempo predefinidos.
+-   `period.apply()`: Aplica una función a intervalos de tiempo personalizados en un objeto "xts". Permite realizar cálculos agregados en intervalos de tiempo definidos por el usuario.
+-   `chart.\*()` (por ejemplo, `chart.TimeSeries()`, `chart.Bar()`): Crea gráficos interactivos para visualizar objetos "xts". Estas funciones facilitan la visualización de datos de series de tiempo en diferentes formatos, como gráficos de líneas, gráficos de barras, gráficos de velas, entre otros.

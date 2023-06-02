@@ -1,0 +1,28 @@
+---
+title: "Introduccion a ggplot"
+output: html_document
+date: "2023-05-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Gramatica de GGPLOT
+
+Utiliza una lógica denominada "gramática de gráficos" para construir gráficos de forma sistemática y personalizable.
+
+La logica de GGPLOT consiste en diferentes capas.
+
+-   **Capa de datos:** En ggplot2, comenzamos especificando los datos que queremos visualizar. Esto se hace mediante la función ggplot() y se le proporciona un conjunto de datos (un data frame) como argumento.
+
+-   **Capa estética (aesthetics):** Luego, definimos cómo queremos mapear las variables de nuestros datos a elementos visuales del gráfico, como colores, formas y tamaños. Esto se hace mediante la función aes() (aesthetics), donde especificamos las variables que deseamos mapear a diferentes atributos visuales.
+
+-   **Capa geométrica:** La capa geométrica define el tipo de gráfico que queremos crear, como un gráfico de dispersión (geom_point()), un gráfico de líneas (geom_line()), un histograma (geom_histogram()), entre otros. Especificamos la capa geométrica utilizando una función como geom_point() y la colocamos después de la función ggplot().
+
+-   **Otros componentes opcionales:** Además de la capa de datos, la capa estética y la capa geométrica, podemos agregar otros componentes opcionales a nuestros gráficos, como títulos, etiquetas de ejes, leyendas, facetas (para dividir los datos en subgráficos) y temas visuales. Estos componentes se especifican mediante funciones adicionales, como `labs()`, `xlab()`, `ylab()`, `facet_wrap()`, `theme()`, entre otros.
+
+Combinación y ajuste de capas: Es posible combinar varias capas geométricas en un solo gráfico para agregar más información o comparar diferentes variables. Esto se logra mediante el uso del operador + para agregar capas adicionales después de la capa geométrica inicial.
+
+Una vez que se ha construido el objeto ggplot con todas las capas y componentes deseados, podemos renderizar el gráfico utilizando la función print() o simplemente escribiendo el nombre del objeto ggplot.

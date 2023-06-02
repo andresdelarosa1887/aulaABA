@@ -1,0 +1,109 @@
+---
+title: "Graficos de Barra - Geom Bar"
+output: html_document
+date: "2023-05-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## QuantMod
+
+El paquete "quantmod" en R es una herramienta que proporciona funcionalidades para el análisis cuantitativo de datos financieros. "quantmod" es un acrónimo de "Quantitative Financial Modelling Framework" (Marco de Modelado Financiero Cuantitativo) y es ampliamente utilizado por analistas financieros, traders y profesionales del campo de las finanzas para realizar tareas como descarga de datos, manipulación de datos financieros, cálculo de indicadores técnicos y análisis de series de tiempo financieras.
+
+## Pre-Modelacion- Obtener y Visualizar Data
+
+Esta parte consiste en obtener la informacion del mercado de valores de Estados Unidos. En el paquete quantmode se utiliza la funcion `GetSymbols` y le pasamos los argumentos de fecha inicial y fecha final.
+
+```{r}
+library(quantmod)
+library(tidyverse)
+
+FAANG <- c("AAPL", "GOOGL", "AMZN", "META", "NFLX")
+fecha_inicio <- "2022-01-01"
+fecha_finalizacion <- today()
+getSymbols(FAANG, from=start_date, to= end_date)
+
+colnames(merge(AAPL, GOOGL, AMZN, META, NFLX))
+```
+
+Aqui obtenemos objetos XTS para cada accion en el formato OHLC que significa Open, High, Low, Close, Volume y Adjusted. Si necesitamos solamente uno podemos encerrar el objeto XTS utilizando una de las siguientes funciones.
+
+-   Op(x)
+
+-   Hi(x)
+
+-   Lo(x)
+
+-   Cl(x)
+
+-   Vo(x)
+
+-   Ad(x)
+
+```{r}
+# Utilizando la funcion Cl obtenemos el precio de cierre de cada dia de las acciones FAANG
+FAANG <- merge(Cl(AAPL), Cl(GOOGL), Cl(AMZN), Cl(META), Cl(NFLX))
+head(FAANG)
+```
+
+```{r}
+returns <- dailyReturn(Cl(GOOGL))
+chartSeries(GOOGL, theme="white", name = "Retornos Diarios de Google")
+```
+
+## Promedio Movil Simple
+
+El Promedio Móvil Simple (Simple Moving Average en inglés, abreviado como SMA) es un indicador técnico utilizado en el análisis de valores financieros y otros campos para suavizar las fluctuaciones de precios y identificar tendencias. El SMA se calcula sumando los precios de cierre de un activo durante un número específico de períodos y dividiendo esa suma por el número de períodos.
+
+La fórmula para calcular el SMA es la siguiente:
+
+SMA = (Suma de precios de cierre durante N períodos) / N
+
+Donde:
+
+-   "Suma de precios de cierre durante N períodos" es la suma de los precios de cierre de un activo durante un número determinado de períodos.
+
+-   "N" representa el número de períodos utilizados en el cálculo del SMA.
+
+El SMA se utiliza para suavizar los datos de precios y eliminar el ruido del mercado, lo que ayuda a identificar la dirección general de una tendencia. Al calcular el promedio de los precios pasados, el SMA proporciona un valor promedio que se actualiza con cada nuevo período.
+
+Por ejemplo, si se desea calcular el SMA de 5 períodos para una serie de precios de cierre diarios, se sumarían los precios de cierre de los últimos 5 días y se dividirían por 5 para obtener el valor del SMA para ese día. A medida que se avanza en el tiempo, se recalcula el SMA utilizando los nuevos precios de cierre y se descarta el precio más antiguo.
+
+El SMA se utiliza en combinación con otros indicadores técnicos y análisis para tomar decisiones de inversión informadas. Algunos traders utilizan las intersecciones del precio con el SMA como señales de compra o venta, considerando que un precio por encima del SMA indica una tendencia alcista y un precio por debajo del SMA indica una tendencia bajista.
+
+Sin embargo, es importante tener en cuenta que el SMA tiene algunas limitaciones. Al ser un promedio simple, puede retrasarse en la detección de cambios en la tendencia y puede generar señales falsas en mercados volátiles. Por lo tanto, es común utilizar otros tipos de medias móviles, como el Promedio Móvil Exponencial (EMA), que asigna mayor peso a los datos más recientes.
+
+```{r}
+returns <- dailyReturn(Cl(AMZN))
+chartSeries(GOOGL, theme="white", name = "Retornos Diarios de Amazon")
+addSMA(n = 10, on = 1, with.col = Cl, overlay = TRUE, col = "blue")
+addSMA(n = 60, on = 1, with.col = Cl, overlay = TRUE, col = "black")
+```
+
+## Bandas de Bollinger
+
+Las Bandas de Bollinger son un indicador técnico utilizado en el análisis de valores financieros, especialmente en el campo del análisis técnico. Fueron desarrolladas por John Bollinger en la década de 1980 y se basan en la idea de que los precios tienden a permanecer dentro de ciertos límites en condiciones normales.
+
+Las Bandas de Bollinger se componen de tres líneas trazadas en un gráfico de precios:
+
+1.  Banda media: Es una línea de promedio móvil simple (SMA, por sus siglas en inglés) que se calcula utilizando un número de períodos especificado. Esta línea representa el promedio de los precios durante ese período y proporciona una referencia para la tendencia general del precio.
+
+2.  Banda superior: Es una línea trazada a una cierta distancia (generalmente dos desviaciones estándar) por encima de la banda media. Esta línea representa un nivel de resistencia potencial, indicando que el precio puede tener dificultades para subir más allá de este nivel.
+
+3.  Banda inferior: Es una línea trazada a la misma distancia por debajo de la banda media. Esta línea representa un nivel de soporte potencial, indicando que el precio puede tener dificultades para caer por debajo de este nivel.
+
+Las Bandas de Bollinger se ajustan automáticamente a la volatilidad del mercado, ya que las bandas se expanden cuando la volatilidad es alta y se contraen cuando la volatilidad es baja. Esto proporciona una medida relativa de la volatilidad actual del precio y ayuda a identificar períodos de alta o baja volatilidad.
+
+Los traders y analistas utilizan las Bandas de Bollinger para identificar posibles puntos de entrada y salida en el mercado. Cuando el precio se acerca o cruza una de las bandas, puede interpretarse como una señal de sobrecompra o sobreventa, lo que puede indicar una posible inversión de la tendencia. Además, los movimientos de precios que se producen fuera de las bandas pueden considerarse señales de ruptura o cambios significativos en la dirección del precio.
+
+Sin embargo, es importante tener en cuenta que las Bandas de Bollinger son solo una herramienta de análisis y no proporcionan señales infalibles. Deben utilizarse en conjunto con otras técnicas y análisis para tomar decisiones de inversión informadas.
+
+```{r}
+returns <- dailyReturn(Cl(META))
+chartSeries(META, theme="white", name = "Retornos Diarios de META")
+#addBBands(n = 10, sd = 2, ma = "SMA", draw = 'bands', on = -1)
+addBBands(n = 60, sd = 1, ma = "SMA", draw = 'bands', on = -1)
+```

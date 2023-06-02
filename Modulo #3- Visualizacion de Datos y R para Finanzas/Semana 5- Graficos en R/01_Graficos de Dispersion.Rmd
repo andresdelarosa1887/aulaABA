@@ -1,0 +1,79 @@
+---
+title: " Grafico de Dispersion- Instrumentos de Renta Fija (precio de un bono y los días al vencimiento )"
+output: html_document
+date: "2023-05-27"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+## Grafico de Dispersion- Geom Point
+
+La función **`geom_point()`** en ggplot2 también tiene varios argumentos que puedes utilizar para personalizar la apariencia y el comportamiento de los puntos en un gráfico. A continuación se presentan algunos de los argumentos más comúnmente utilizados:
+
+-   **`shape`**: Este argumento determina la forma de los puntos. Puedes especificar diferentes valores numéricos o códigos de letras para elegir entre una variedad de formas predefinidas, como círculos, cuadrados, triángulos, etc.
+
+-   **`size`**: Este argumento establece el tamaño de los puntos. Puedes proporcionar un valor numérico para un tamaño fijo o utilizar una variable en los datos para crear puntos de diferentes tamaños.
+
+-   **`color`**: Este argumento establece el color de los puntos. Al igual que con otros elementos gráficos, puedes especificar un color único o asignarlo a una variable en los datos para crear puntos de diferentes colores.
+
+-   **`fill`**: Si deseas rellenar los puntos con color en lugar de tener solo el contorno, puedes utilizar este argumento para establecer el color de relleno de los puntos.
+
+-   **`alpha`**: Al igual que con **`geom_bar()`**, el argumento **`alpha`** también está disponible en **`geom_point()`** y te permite controlar la transparencia de los puntos.
+
+-   **`...`**: Al igual que con **`geom_bar()`**, el argumento de puntos suspensivos **`...`** te permite pasar parámetros gráficos adicionales para personalizar la apariencia de los puntos, como **`shape`**, **`size`**, **`color`** y otros.
+
+Estos son solo algunos de los argumentos más comúnmente utilizados de **`geom_point()`**. Puedes encontrar más detalles y opciones adicionales en la documentación oficial de ggplot2: [**https://ggplot2.tidyverse.org/reference/geom_point.html**](https://ggplot2.tidyverse.org/reference/geom_point.html)
+
+## Grafico de Dispersion- Instrumentos de Renta Fija (precio de un bono y los días al vencimiento )
+
+La relación entre el precio de un bono y los días al vencimiento del mismo se basa en el concepto de la sensibilidad de los bonos al tiempo, conocida como duración.
+
+En general, cuando los días al vencimiento de un bono disminuyen, su precio tiende a acercarse a su valor nominal o valor de vencimiento. Esto se debe a que a medida que el bono se acerca a su vencimiento, los flujos de efectivo futuros se vuelven más predecibles y se espera que se paguen en su totalidad.
+
+Por otro lado, a medida que los días al vencimiento aumentan, el precio del bono tiende a ser más sensible a los cambios en las tasas de interés. Si las tasas de interés aumentan, el precio del bono tiende a disminuir, ya que los flujos de efectivo futuros del bono se descuentan a una tasa de interés más alta. Por el contrario, si las tasas de interés disminuyen, el precio del bono tiende a aumentar.
+
+Es importante tener en cuenta que la relación entre el precio del bono y los días al vencimiento puede verse afectada por otros factores, como los pagos de cupón, la calidad crediticia del emisor del bono y las condiciones del mercado. Además, los bonos con características especiales, como bonos con opciones incorporadas, pueden tener relaciones más complejas entre el precio y los días al vencimiento.
+
+En resumen, a medida que los días al vencimiento disminuyen, el precio del bono tiende a acercarse a su valor nominal, mientras que a medida que los días al vencimiento aumentan, el precio del bono tiende a ser más sensible a los cambios en las tasas de interés.
+
+```{r}
+opdiarias_rf <- readRDS("../../Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
+
+##  La relacion entre el precio la cantidad e coutas transadas para renta variable 
+
+
+opdiarias_rf <- na.omit(opdiarias_rf)
+
+##  Relacion entre el precio y la cantidad de cuotas transadas (Grafico de dispersion)
+## Relacion entre el precio y la tasa de cupon de un instrumento financiero
+
+
+##Creo el modelo de regresion lineal 
+x=as.numeric(opdiarias_rf$`Días Venc.`)
+y= as.numeric(opdiarias_rf$`Precio`)
+modelo <- lm( y ~ x )
+x_minimo <- min(x, na.rm = TRUE)
+y_maximo <- max(y, na.rm = TRUE)
+
+
+##Relacion entre el precio del titulo de renta fija y los dias al vencimiento
+ggplot(data = opdiarias_rf, aes(x = as.numeric(`Días Venc.`) , y =  as.numeric(`Precio`))) +
+  geom_point(aes(color = `Cód. Local`)) +
+  geom_smooth(method = "lm", se = TRUE, color = "red") + 
+  geom_text(x = x_minimo, y = y_maximo, 
+            label = paste("y =", round(coef(modelo)[1], 2), "+", round(coef(modelo)[2], 4), "* x"), hjust = 0, vjust = 1) + 
+  labs(x = "Dias al Vencimiento",
+       y = "Precio del Título de Renta Fija",
+       title = "Precio de los Bonos Transados y los Días al Vencimiento", 
+       subtitle =  paste("De", min(opdiarias_rf$fecha_operacion), "a",
+                         max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion)), 
+       caption= "Datos de la BVRD") + 
+  scale_color_discrete(name = "`Cód. Local`") +
+  theme_classic() + 
+  theme(legend.position = "none",
+        legend.title = element_blank())
+
+```
