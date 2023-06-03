@@ -79,8 +79,10 @@ Sin embargo, es importante tener en cuenta que el SMA tiene algunas limitaciones
 ```{r}
 returns <- dailyReturn(Cl(AMZN))
 chartSeries(GOOGL, theme="white", name = "Retornos Diarios de Amazon")
+
 addSMA(n = 10, on = 1, with.col = Cl, overlay = TRUE, col = "blue")
 addSMA(n = 60, on = 1, with.col = Cl, overlay = TRUE, col = "black")
+SMA()
 ```
 
 ## Bandas de Bollinger
@@ -106,4 +108,5 @@ returns <- dailyReturn(Cl(META))
 chartSeries(META, theme="white", name = "Retornos Diarios de META")
 #addBBands(n = 10, sd = 2, ma = "SMA", draw = 'bands', on = -1)
 addBBands(n = 60, sd = 1, ma = "SMA", draw = 'bands', on = -1)
+BBands(Cl(MSFT), n = 20, sd = 2)
 ```

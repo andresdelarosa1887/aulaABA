@@ -31,7 +31,7 @@ library(xts)
 library(tidyverse)
 library(lubridate)
 
-opdiarias_rv <- readRDS("Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
+opdiarias_rv <- readRDS("//Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
 opdiarias_rv <- na.omit(opdiarias_rv)
 
 un_instrumento_frecuente <- opdiarias_rv %>%select("codigo_local"= `Cód. Local`,
@@ -57,6 +57,8 @@ CP1EX201 <- opdiarias_xts %>% filter(codigo_local %in% c("CP1EX201")) %>%
 
 CP1EX201 <- xts(CP1EX201$High, order.by= CP1EX201$fecha_operacion)
 colnames(CP1EX201)[1] <- "CP1EX201"
+
+chart.TimeSeries(CP1EX201)
 ```
 
 -   `as.xts()`: Convierte un objeto de datos en un objeto "xts". Esta función es útil cuando se trabaja con datos en otros formatos y se desea convertirlos a un formato compatible con "xts".
