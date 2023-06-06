@@ -1,0 +1,48 @@
+---
+title: "Creacion del Portafolio"
+output: html_document
+date: "2023-06-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## De finicion del mix de activos en nuestro portafolio
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+library(PerformanceAnalytics)
+library(quantmod)
+library(tidyverse)
+
+retornos_mensuales_FAANG <- readRDS("retornos_mensuales_FAANG.rds")
+
+n <- ncol(xtsFAANG_daily_returns)
+equal_weights <- rep(1/n, n) ##Cada acción tendrá un peso inicial correspondiente al 20%
+
+FAANG_EqualWeights <- Return.portfolio(
+  R= xtsFAANG_daily_returns, 
+  weights= equal_weights, 
+  rebalance_on ="months", 
+  verbose= TRUE ##Activamos el verbose para obtener una lista con diferentes parámetros relacionados al cálculo del retorno de este inndice
+)
+
+##Obtenemos el objeto de retornos del portafolio
+Retornos_FAAN_EqualWeights <- FAANG_EqualWeights$returns
+colnames(Retornos_FAAN_EqualWeights) <- "FAAMG-EqualWeights"
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+
+```{r}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

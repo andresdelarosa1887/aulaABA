@@ -1,0 +1,88 @@
+---
+title: "Consulta de Datos y Transformaciones Iniciales"
+output: html_document
+date: "2023-06-06"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Consulta de datos
+
+En esta seccion definimos las acciones de las empresas que nos gustaria consultar en un vector, asi como la fecha de inicio de la consulta y la fecha final.
+
+-   Luego consultamos utilizando la funcion `GetSymbols`.
+
+-   Aplicamos la funcion `map()`del paquete **purr** y aplicamos `get()` para obtener los precios ajustados de cada uno de los objetos consultados por eso aplicamos `Ad(get(.))` a los precios importados. Esto nos da como resultado 5 listas con los precios ajustados.
+
+-   Para unificar estas 5 listas en un solo objeto XTS utilizamos la funcion `reduce(merge)`
+
+```{r}
+library(PerformanceAnalytics)
+library(quantmod)
+library(tidyverse)
+precios_FAANG_vect <- c("AMZN", "META", "NFLX", "GOOGL", "AAPL")
+
+fecha_inicio <- "2015-01-01"
+fecha_final <- "2023-06-01"
+
+precios_FAANG <- getSymbols( 
+  precios_FAANG_vect, 
+  src= "yahoo", 
+  from= fecha_inicio, 
+  to=  fecha_final, 
+  auto.assign =  TRUE, 
+  warnings= FALSE) %>%
+  map(~Ad(get(.))) %>%
+  reduce(merge)
+
+colnames(precios_FAANG) <- (precios_FAANG_vect)
+
+head(precios_FAANG)
+```
+
+## Convertimos los Precios Diarios a Retornos Mensuales en el Mundo XTS
+
+Queremos convertir los precios diarios a precios mensuales basados en la ultima data del mes. Para esto utilizamos la funcion `to.monthly` y le especificamos `lastof` (ultimo dia del mes) y que la data no viene en el formato OHLC.
+
+```{r}
+precios_mensuales <- to.monthly(precios_FAANG, indexAt = "lastof", OHLC= FALSE)
+head(precios_mensuales)
+```
+
+## Retornos Mensuales en escala Log
+
+Para convertir nuestros precios mensuales en retornos mensuales utilizamos la funcion `Return.calculate()` de performanceanalytics y utilizamos el metodo `log`
+
+```{r}
+retornos_mensuales_FAANG <- Return.calculate(precios_mensuales, method= "log") %>% na.omit
+head(retornos_mensuales_FAANG)
+write_rds(retornos_mensuales_FAANG, "retornos_mensuales_FAANG.rds")
+```
+
+## Visualizamos los retornos que compondran nuestro portafolio
+
+```{r, echo=FALSE}
+retornos_mensuales_FAANG_largo <- retornos_mensuales_FAANG %>%
+  data.frame(fecha= index(.)) %>%
+  remove_rownames() %>% 
+   pivot_longer(cols =all_of(precios_FAANG_vect), names_to = "Stock", values_to = "Retornos") 
+
+
+unidos <- ggplot(retornos_mensuales_FAANG_largo, aes(x= Retornos)) +
+      geom_density(aes(color= Stock), alpha=0.5) + 
+  geom_histogram(aes(fill= Stock), alpha=0.45, binwidth = .005) + 
+  ggtitle("Retornos Mensuales desde en 2015 de las FAANG")
+
+plot(unidos)
+
+separados <-  ggplot(retornos_mensuales_FAANG_largo, aes(x= Retornos)) +
+      geom_density(aes(color= Stock), alpha=0.5) + 
+  geom_histogram(aes(fill= Stock), alpha=0.45, binwidth = .005) + 
+    facet_wrap(~Stock)
+  ggtitle("Retornos Mensuales desde en 2015 de las FAANG")
+  
+plot(separados)
+
+```

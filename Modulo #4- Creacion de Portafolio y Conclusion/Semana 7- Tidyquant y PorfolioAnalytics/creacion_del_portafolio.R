@@ -1,12 +1,13 @@
 
 
+
 n <- ncol(xtsFAANG_daily_returns)
 equal_weights <- rep(1/n, n) ##Cada acción tendrá un peso inicial correspondiente al 20%
 
 FAANG_EqualWeights <- Return.portfolio(
   R= xtsFAANG_daily_returns, 
   weights= equal_weights, 
-  rebalance_on ="years", 
+  rebalance_on ="months", 
   verbose= TRUE ##Activamos el verbose para obtener una lista con diferentes parámetros relacionados al cálculo del retorno de este inndice
 )
 
