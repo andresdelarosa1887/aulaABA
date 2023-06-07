@@ -10,9 +10,11 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## De finicion del mix de activos en nuestro portafolio
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Luego de importar nuestro archivo de retornos mensuales definimos los pesos de nuestro mix de acciones dentro de nuestro portafolio y le especificamos que queremos el rebalanceo de nuestro portafolio sea cada ano. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+El rebalanceo de un portafolio anual es el proceso de ajustar las ponderaciones de los activos dentro de un portafolio para mantener la asignación de activos deseada en un horizonte de tiempo específico, generalmente un año.
+
+Cuando se construye un portafolio, se establece una asignación de pesos o porcentajes para cada activo o clase de activos con el objetivo de alcanzar ciertos objetivos de rendimiento y nivel de riesgo. Sin embargo, a medida que pasa el tiempo, el valor de los activos individuales puede cambiar y, como resultado, las ponderaciones iniciales se desvían de la asignación deseada.
 
 ```{r}
 library(PerformanceAnalytics)
@@ -21,13 +23,13 @@ library(tidyverse)
 
 retornos_mensuales_FAANG <- readRDS("retornos_mensuales_FAANG.rds")
 
-n <- ncol(xtsFAANG_daily_returns)
-equal_weights <- rep(1/n, n) ##Cada acción tendrá un peso inicial correspondiente al 20%
+n <- ncol(retornos_mensuales_FAANG)
+pesos_iguales <- rep(1/n, n) ##Cada acción tendrá un peso inicial correspondiente al 20%
 
 FAANG_EqualWeights <- Return.portfolio(
-  R= xtsFAANG_daily_returns, 
-  weights= equal_weights, 
-  rebalance_on ="months", 
+  R= retornos_mensuales_FAANG, 
+  weights= retornos_mensuales_FAANG, 
+  rebalance_on ="years", 
   verbose= TRUE ##Activamos el verbose para obtener una lista con diferentes parámetros relacionados al cálculo del retorno de este inndice
 )
 
@@ -40,9 +42,15 @@ colnames(Retornos_FAAN_EqualWeights) <- "FAAMG-EqualWeights"
 
 You can also embed plots, for example:
 
-
 ```{r}
-
+##Graficamos la evolución de los pesos de cada una de las acciones FAANG para tener una idea de como Return.portfolio hace los rebalanceos en los periodos especificados
+PesosFinalDelPeriodo <- data.frame(FAANG_EqualWeights$EOP.Weight) 
+PesosFinalDelPeriodo <- tibble::rownames_to_column(PesosFinalDelPeriodo, "fecha")
+PesosFinalDelPeriodo2 <- gather(PesosFinalDelPeriodo, Acciones, Pesos, -fecha)
+PesosFinalDelPeriodo2 %>%
+  ggplot( aes(x=as.Date(fecha), y=Pesos, group=Acciones, color= Acciones)) +
+    geom_line() + ggtitle("Evolución de los Pesos de las Acciones FAANG") + labs(x= "Fecha") +
+          geom_vline(xintercept = c(as.Date("2018-01-01"),as.Date("2019-01-01"),as.Date("2020-01-01")) , linetype="dotted",  color = "blue", size=0.9)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
