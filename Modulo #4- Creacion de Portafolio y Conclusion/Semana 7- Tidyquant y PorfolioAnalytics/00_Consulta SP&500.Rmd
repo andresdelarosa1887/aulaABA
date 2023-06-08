@@ -25,6 +25,8 @@ Utilidad en inversiones y gestión de carteras: El S&P 500 se utiliza como bench
 
 En resumen, el S&P 500 es un índice amplio y representativo del mercado de valores estadounidense, ampliamente utilizado como benchmark para evaluar el rendimiento del mercado, fondos de inversión y carteras gestionadas. Su popularidad, reconocimiento y historial de datos lo convierten en una referencia comúnmente aceptada en el ámbito financiero.
 
+GSPC es un acrónimo que se refiere al Índice Compuesto S&P 500, también conocido como Standard & Poor's 500. Es uno de los índices bursátiles más importantes y ampliamente seguidos en los Estados Unidos y en todo el mundo.
+
 
 ```{r}
 suppressPackageStartupMessages(library(PerformanceAnalytics))

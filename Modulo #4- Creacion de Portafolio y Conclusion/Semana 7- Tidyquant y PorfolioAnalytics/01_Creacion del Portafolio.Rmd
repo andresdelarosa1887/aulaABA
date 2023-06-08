@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## De finicion del mix de activos en nuestro portafolio
 
-Luego de importar nuestro archivo de retornos mensuales definimos los pesos de nuestro mix de acciones dentro de nuestro portafolio y le especificamos que queremos el rebalanceo de nuestro portafolio sea cada ano. 
+Luego de importar nuestro archivo de retornos mensuales definimos los pesos de nuestro mix de acciones dentro de nuestro portafolio y le especificamos que queremos el rebalanceo de nuestro portafolio sea cada ano.
 
 El rebalanceo de un portafolio anual es el proceso de ajustar las ponderaciones de los activos dentro de un portafolio para mantener la asignación de activos deseada en un horizonte de tiempo específico, generalmente un año.
 
@@ -38,6 +38,7 @@ Retornos_FAAN_EqualWeights <- FAANG_EqualWeights$returns
 colnames(Retornos_FAAN_EqualWeights) <- "FAAMG-EqualWeights"
 head(FAANG_EqualWeights$contribution)
 ```
+
 ## Visualizamos el Peso de Cada accion al final del periodo
 
 Es importante tener en cuenta que la periodicidad del rebalanceo y los pesos iniciales de cada acción se pueden modificar de acuerdo la estrategia de inversión seleccionada o un análisis técnico anterior como una optimización recurrente.
@@ -61,7 +62,7 @@ PesosFinalDelPeriodo2 %>%
                                     ) , linetype="dotted",  color = "blue", linewidth=0.2) +
   theme_minimal()
 ```
+
 ```{r}
 write_rds(FAANG_EqualWeights, "portafolio_FAANG_EW.rds")
 ```
-

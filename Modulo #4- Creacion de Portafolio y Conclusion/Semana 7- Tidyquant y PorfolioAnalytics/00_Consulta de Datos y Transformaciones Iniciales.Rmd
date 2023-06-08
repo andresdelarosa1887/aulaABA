@@ -19,9 +19,9 @@ En esta seccion definimos las acciones de las empresas que nos gustaria consulta
 -   Para unificar estas 5 listas en un solo objeto XTS utilizamos la funcion `reduce(merge)`
 
 ```{r}
-library(PerformanceAnalytics)
-library(quantmod)
-library(tidyverse)
+suppressPackageStartupMessages(library(PerformanceAnalytics))
+suppressPackageStartupMessages(library(quantmod))
+suppressPackageStartupMessages(library(tidyverse))
 precios_FAANG_vect <- c("AMZN", "META", "NFLX", "GOOGL", "AAPL")
 
 fecha_inicio <- "2015-01-01"

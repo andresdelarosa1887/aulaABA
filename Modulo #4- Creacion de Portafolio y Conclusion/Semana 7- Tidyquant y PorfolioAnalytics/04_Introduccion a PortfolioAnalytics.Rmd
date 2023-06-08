@@ -8,57 +8,97 @@ date: "2023-06-08"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Creación del Portafolio
-Utilizando el paquete PortfolioAnalytics creamos un portafolio con la siguientes restricciones básicas:
-
-El peso de cada acción tendrá como mínimo 1% y como máximo 15%
-El objetivo será maximizar el retorno medido por el promedio y minimizar el riesgo medido por la desviación estándar del portafolio.
+## Consulta de la información 
+Consultamos los precios de las acciones FAANG entre enero 2015 y junio del 2023 y luego obtenemos los retornos diarios de estas acciones. 
 
 ```{r}
+suppressPackageStartupMessages(library(quantmod))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(PerformanceAnalytics))
+suppressPackageStartupMessages(library(PortfolioAnalytics))
 
-port_specLT <- portfolio.spec(assets= LargeTech)
-port_specLT <- add.constraint(port_specLT, type="box",
-                              min=0.01,
-                              max=0.15, 
-                              indexnum = 1)
+precios_FAANG_vect <- c("AMZN", "META", "NFLX", "GOOGL", "AAPL")
 
-port_specLT <- add.objective(port_specLT, type= "return", name="mean")
-port_specLT <- add.objective(port_specLT, type="risk", name="StdDev")
+fecha_inicio <- "2015-01-01"
+fecha_final <- "2023-06-01"
 
-```
+precios_FAANG <- getSymbols( 
+  precios_FAANG_vect, 
+  src= "yahoo", 
+  from= fecha_inicio, 
+  to=  fecha_final, 
+  auto.assign =  TRUE, 
+  warnings= FALSE) %>%
+  map(~Ad(get(.))) %>%
+  reduce(merge)
 
-Luego de especificar algunas restricciones a nuestro portafolio procedemos a evaluar el desempeño de este portafolio utilizando como técnica de optimización ROI, rebalanceando el portafolio anualmente. Utilizando como periodo de entrenamiento 150 días.
-
-```{r}
-
-LargeTech_opt_base <- optimize.portfolio.rebalancing(
-  R = xtsLargeTech_daily_returns, 
-  optimize_method =  "ROI",
-  portfolio =  port_specLT,
-  rebalance_on = "years", 
-  training_period = 200, 
-  rolling_window = 200, 
-  trace= TRUE)
+colnames(precios_FAANG) <- (precios_FAANG_vect)
+retornos_diarios_FAANG <- Return.calculate(precios_FAANG, method= "log") %>% na.omit
 
 
 ```
 
-Para acceder a los resultados del rebalanceo de las acciones analizamos la lista de resultados obtenidas de la funcion optimize.portfolio.repalancing
+## Creacion del Portafolio y Restricciones
+
+Inicializamos nuestro portafolio indicandole al paquete portfolio Analytics que estaremos usando las acciones FAANG y le especificamos 2 restricciones. 
+
+- Una de leverage que se refiere al apalancamiento financiero, que es la relación entre el capital propio y los fondos prestados utilizados en una inversión. En el contexto de la optimización de carteras, una restricción de tipo "leverage" limita el nivel de apalancamiento permitido en la cartera.
+
+- Una tipo "box" que establece límites específicos para los pesos de los activos individuales en la cartera. Estos límites definen un rango en el cual los pesos de los activos deben estar dentro de los límites especificados.
+
+```{r}
+init <- portfolio.spec(assets=precios_FAANG_vect)
+
+init <- add.constraint(portfolio=init, type="leverage",
+                       min_sum=0.99, max_sum=1.01)
+init <- add.constraint(portfolio=init, type="box", min=0.05, max=0.65)
+
+```
+
+## Objetivo de nuestro portafolio 
+Si utilizamos el método ROI y el objetivo type es "return" y name es "mean" (promedio), significa que estás maximizando el retorno promedio de la cartera en la optimización.
+
+El objetivo "return" se refiere al rendimiento esperado de la cartera, es decir, la medida de cuánto se espera que la cartera genere de rendimiento en un período de tiempo determinado. Al especificar "return" como objetivo, estás indicando que deseas maximizar el rendimiento promedio de la cartera.
+
+El "name" en este caso es "mean", que se traduce al español como "promedio". Esto se refiere a que estás buscando maximizar el promedio de los retornos de la cartera.
+
+La combinación de estos parámetros en el método ROI y objetivo "return" con "name" como "mean" implica que la optimización se centra en encontrar los pesos óptimos de los activos de la cartera que maximicen el retorno promedio de la cartera en función de las restricciones y los datos proporcionados.
+
+Recuerda que estos términos pueden variar dependiendo del paquete o la biblioteca que estés utilizando, por lo que siempre es recomendable consultar la documentación específica para asegurarte de utilizar los parámetros correctos y comprender su interpretación exacta en el contexto de la optimización de carteras.
+
+
+```{r}
+##Objetivos del Portafolio, maximixacion del retorno basado en el promedio
+maxret <- add.objective(portfolio=init, type="return", name="mean")
+```
+
+## Optimizacion del Portafolio
+
+Periodo de entrenamiento (Training period = 60): Esto significa que utilizas los últimos 720 dias de datos de retornos diarios para estimar los parámetros y características de tu cartera. Durante este período, se calculan las métricas relevantes, como rendimientos, volatilidad, correlaciones y covarianzas, entre otros. Estos cálculos te ayudan a construir un modelo de la cartera basado en la dinámica pasada de los activos.
+
+Rolling window (Rolling window = 5): Después de cada año (12 meses), realizas un rebalanceo de la cartera y ajustas los pesos de los activos. Sin embargo, en lugar de utilizar solo los últimos 12 meses de datos para realizar la optimización, estás utilizando una ventana más amplia de 5 años (60 meses). Esto significa que, en cada rebalanceo anual, ajustas los pesos utilizando los últimos 60 meses de datos disponibles. A medida que avanzas en el tiempo, la ventana de 60 meses se desplaza, lo que permite capturar cambios en las características del mercado y adaptar la cartera a las nuevas condiciones.
+
+En resumen, estás utilizando un período de entrenamiento de 60 meses para estimar los parámetros de la cartera y un rolling window de 5 años para realizar el rebalanceo anual. Esto te permite aprovechar una ventana de datos más amplia para estimar las características de la cartera y evaluar su desempeño a lo largo del tiempo.
+
+
+El método de optimización ROI (Return on Investment) se utiliza para maximizar el retorno de una cartera de inversiones sujeta a ciertas restricciones. En el contexto de la optimización de carteras, el objetivo principal de utilizar el método ROI es maximizar el rendimiento o retorno esperado de la cartera.
+
+Cuando se aplica el método ROI en la optimización de carteras, se busca asignar los pesos óptimos a los activos de la cartera de manera que se maximice el retorno esperado de la inversión. Se tienen en cuenta diferentes parámetros y restricciones, como rendimientos históricos, volatilidad, correlaciones entre activos y restricciones de asignación de capital.
+
+El método ROI considera la relación entre el retorno y el riesgo en la cartera. Al maximizar el rendimiento esperado, se tiene en cuenta el nivel de riesgo asumido. En general, el objetivo es encontrar una combinación de activos que proporcione el mejor retorno posible dentro de los límites establecidos por las restricciones.
+
 
 ```{r}
 
-chart.Weights(LargeTech_opt_base, main="Evolución de las Distribuciones de los\n Pesos de las Acciones Dado el Periodo de Rebalanceo")
-print("Características del último Portafolio Rebalanceado")
-LargeTech_opt_base$opt_rebalancing$`2020-09-11`
+opt_maxret <- optimize.portfolio.rebalancing(R=retornos_diarios_FAANG, portfolio=maxret,
+                                 optimize_method="ROI",
+                                 trace=TRUE, 
+                                 rebalance_on = "years", 
+                                 training_period = 720, 
+                                 rolling_window = 1)
+
+
+chart.Weights(opt_maxret, main="Evolución de las Distribuciones de los\n Pesos de las Acciones Dado el Periodo de Rebalanceo")
+
+
 ```
-
-Se puede ver como los pesos de cada una de las acciones se mantienen entre 0.01 y 0.15 como especificamos en las restricciones del portalfolio ("box constraints")
-
-```{r}
-weights <- data.frame(first_rebalance=LargeTech_opt_base$opt_rebalancing$`2017-12-29`$weights,second_rebalance= LargeTech_opt_base$opt_rebalancing$`2018-12-31`$weights,
-third_rebalance= LargeTech_opt_base$opt_rebalancing$`2019-12-31`$weights, fourth_rebalance= LargeTech_opt_base$opt_rebalancing$`2020-09-11`$weights)
-head(weights, 20)
-```
-
-
-
