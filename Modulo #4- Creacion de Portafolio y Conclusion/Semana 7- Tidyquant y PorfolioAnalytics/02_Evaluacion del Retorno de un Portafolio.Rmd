@@ -8,22 +8,75 @@ date: "2023-06-06"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+### Evolucion de los Retornos del Portafolio
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Luego de que tenemos nuestro portafolio, analizamos los retornos del mismo. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r}
+suppressPackageStartupMessages(library(quantmod))
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(PerformanceAnalytics))
 
-```{r cars}
-summary(cars)
+FAANG <- readRDS("portafolio_FAANG_EW.rds")
+retornos_portf_faang <- FAANG$returns %>%
+  data.frame(fecha= index(.)) %>%
+  remove_rownames() 
+
+  retorno_FAANG <-  ggplot(data = retornos_portf_faang, aes(x = fecha, y = portfolio.returns*100)) +
+    geom_line() +
+    scale_x_date(date_labels = "%b-%Y")  +
+    labs(title= "Evolucion del Retorno del Portafolio FAANG",
+         subtitle =  paste("Valores Mensuales de", min(retornos_portf_faang$fecha), "a", max(retornos_portf_faang$fecha)), 
+         x= "Fecha",
+         y= "Retorno", 
+         caption= "Yahoo Finance") + 
+    theme_classic() + 
+    theme(legend.position = "none",
+          legend.title = element_blank()) + 
+    theme_classic()
+  plot(retorno_FAANG)
+  
 ```
 
-## Including Plots
+### Distribucion de los Retornos
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r, echo=FALSE}
+  chart.Histogram(retornos_portf_faang$portfolio.returns, methods = c("add.density","add.centered"),
+                  main = " Retorno del Portafolio FAANG", 
+                  xlab= "Retorno", 
+                  ylab= "Frecuencia")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Comparacion con el SP&500
+
+```{r}
+sp500 <- Cl(readRDS("retornos_mensuales_SP&500.rds"))
+benchmark_returns <- cbind(sp500, retornos_portf_faang$portfolio.returns)
+colnames(benchmark_returns) <- c("SP&500","FAAG_PORT")
+head(benchmark_returns)
+```
+```{r}
+
+par(mfrow= c(1,2))
+
+plot(density(benchmark_returns$`SP&500`*100),
+     main = "Retornos SP&500", 
+     xlab = "Retornos",
+     ylab= "Frecuencia")
+
+plot(density(benchmark_returns$FAAG_PORT*100),
+     main = "Retornos FAANG",
+     ylab= "Frecuencia", 
+     xlab= "Retornos")
+
+```
+
+
+```{r}
+data.frame(table.AnnualizedReturns(benchmark_returns))
+charts.PerformanceSummary(benchmark_returns, main= "Desempeño del SP&500 y las Acciones FAANG")
+```
+
+
+
+

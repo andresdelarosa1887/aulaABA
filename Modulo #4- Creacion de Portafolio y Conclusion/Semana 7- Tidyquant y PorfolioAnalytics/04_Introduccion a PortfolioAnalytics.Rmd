@@ -1,0 +1,64 @@
+---
+title: "Introduccion a PortfolioAnalytics"
+output: html_document
+date: "2023-06-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Creación del Portafolio
+Utilizando el paquete PortfolioAnalytics creamos un portafolio con la siguientes restricciones básicas:
+
+El peso de cada acción tendrá como mínimo 1% y como máximo 15%
+El objetivo será maximizar el retorno medido por el promedio y minimizar el riesgo medido por la desviación estándar del portafolio.
+
+```{r}
+
+port_specLT <- portfolio.spec(assets= LargeTech)
+port_specLT <- add.constraint(port_specLT, type="box",
+                              min=0.01,
+                              max=0.15, 
+                              indexnum = 1)
+
+port_specLT <- add.objective(port_specLT, type= "return", name="mean")
+port_specLT <- add.objective(port_specLT, type="risk", name="StdDev")
+
+```
+
+Luego de especificar algunas restricciones a nuestro portafolio procedemos a evaluar el desempeño de este portafolio utilizando como técnica de optimización ROI, rebalanceando el portafolio anualmente. Utilizando como periodo de entrenamiento 150 días.
+
+```{r}
+
+LargeTech_opt_base <- optimize.portfolio.rebalancing(
+  R = xtsLargeTech_daily_returns, 
+  optimize_method =  "ROI",
+  portfolio =  port_specLT,
+  rebalance_on = "years", 
+  training_period = 200, 
+  rolling_window = 200, 
+  trace= TRUE)
+
+
+```
+
+Para acceder a los resultados del rebalanceo de las acciones analizamos la lista de resultados obtenidas de la funcion optimize.portfolio.repalancing
+
+```{r}
+
+chart.Weights(LargeTech_opt_base, main="Evolución de las Distribuciones de los\n Pesos de las Acciones Dado el Periodo de Rebalanceo")
+print("Características del último Portafolio Rebalanceado")
+LargeTech_opt_base$opt_rebalancing$`2020-09-11`
+```
+
+Se puede ver como los pesos de cada una de las acciones se mantienen entre 0.01 y 0.15 como especificamos en las restricciones del portalfolio ("box constraints")
+
+```{r}
+weights <- data.frame(first_rebalance=LargeTech_opt_base$opt_rebalancing$`2017-12-29`$weights,second_rebalance= LargeTech_opt_base$opt_rebalancing$`2018-12-31`$weights,
+third_rebalance= LargeTech_opt_base$opt_rebalancing$`2019-12-31`$weights, fourth_rebalance= LargeTech_opt_base$opt_rebalancing$`2020-09-11`$weights)
+head(weights, 20)
+```
+
+
+

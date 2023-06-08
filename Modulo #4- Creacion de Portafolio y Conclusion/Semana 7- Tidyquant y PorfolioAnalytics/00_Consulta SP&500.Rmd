@@ -1,0 +1,49 @@
+---
+title: "Consultando SP&500"
+output: html_document
+date: "2023-06-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Consultando el S&P 500 
+
+El S&P 500 (Standard & Poor's 500) es un índice bursátil ampliamente utilizado en los Estados Unidos como referencia o benchmark del desempeño del mercado de valores. Es creado y mantenido por la empresa de análisis financiero Standard & Poor's, que forma parte de S&P Global.
+
+El S&P 500 está compuesto por 500 de las mayores empresas públicas de Estados Unidos, seleccionadas por su tamaño de mercado, liquidez y representatividad en diferentes sectores de la economía. Estas empresas son ponderadas en función de su capitalización bursátil, lo que significa que las empresas más grandes tienen un impacto mayor en el rendimiento del índice.
+
+Existen varias razones por las cuales el S&P 500 se utiliza como benchmark:
+
+Representatividad del mercado: El S&P 500 incluye una amplia muestra de empresas de diferentes sectores y tamaños, lo que lo hace representativo del mercado de valores de Estados Unidos. Al ser un índice amplio, se considera una medida adecuada para evaluar el desempeño general del mercado accionario.
+
+Popularidad y reconocimiento: El S&P 500 es uno de los índices más conocidos y seguidos en el mundo financiero. Su popularidad y reconocimiento lo convierten en una referencia ampliamente aceptada por inversores, analistas y gestores de fondos.
+
+Historial de datos: El S&P 500 tiene un historial de datos largo y confiable, lo que permite un análisis retrospectivo del desempeño del mercado a lo largo del tiempo. Esto facilita comparaciones y evaluaciones del rendimiento de inversiones en relación con el índice.
+
+Utilidad en inversiones y gestión de carteras: El S&P 500 se utiliza como benchmark para evaluar el rendimiento de fondos de inversión, carteras gestionadas y estrategias de inversión. Comparar los retornos obtenidos con los del índice ayuda a medir la eficacia de las estrategias y a evaluar la habilidad de los gestores para superar al mercado.
+
+En resumen, el S&P 500 es un índice amplio y representativo del mercado de valores estadounidense, ampliamente utilizado como benchmark para evaluar el rendimiento del mercado, fondos de inversión y carteras gestionadas. Su popularidad, reconocimiento y historial de datos lo convierten en una referencia comúnmente aceptada en el ámbito financiero.
+
+
+```{r}
+suppressPackageStartupMessages(library(PerformanceAnalytics))
+suppressPackageStartupMessages(library(quantmod))
+suppressPackageStartupMessages(library(tidyverse))
+
+fecha_inicio <- "2015-01-01"
+fecha_final <- "2023-06-01"
+
+getSymbols("^GSPC", from= fecha_inicio, to= fecha_final)
+SP500 <- GSPC
+```
+
+## Including Plots
+
+```{r pressure, echo=FALSE}
+SP500_mensual <- to.monthly(SP500, indexAt = "lastof", OHLC= FALSE)
+retornos_mensuales_SP500 <- Return.calculate(SP500_mensual, method= "log") %>% na.omit
+write_rds(retornos_mensuales_SP500, "retornos_mensuales_SP&500.rds")
+head(retornos_mensuales_SP500)
+```
+

@@ -28,7 +28,7 @@ pesos_iguales <- rep(1/n, n) ##Cada acción tendrá un peso inicial correspondie
 
 FAANG_EqualWeights <- Return.portfolio(
   R= retornos_mensuales_FAANG, 
-  weights= retornos_mensuales_FAANG, 
+  weights= pesos_iguales, 
   rebalance_on ="years", 
   verbose= TRUE ##Activamos el verbose para obtener una lista con diferentes parámetros relacionados al cálculo del retorno de este inndice
 )
@@ -36,11 +36,11 @@ FAANG_EqualWeights <- Return.portfolio(
 ##Obtenemos el objeto de retornos del portafolio
 Retornos_FAAN_EqualWeights <- FAANG_EqualWeights$returns
 colnames(Retornos_FAAN_EqualWeights) <- "FAAMG-EqualWeights"
+head(FAANG_EqualWeights$contribution)
 ```
+## Visualizamos el Peso de Cada accion al final del periodo
 
-## Including Plots
-
-You can also embed plots, for example:
+Es importante tener en cuenta que la periodicidad del rebalanceo y los pesos iniciales de cada acción se pueden modificar de acuerdo la estrategia de inversión seleccionada o un análisis técnico anterior como una optimización recurrente.
 
 ```{r}
 ##Graficamos la evolución de los pesos de cada una de las acciones FAANG para tener una idea de como Return.portfolio hace los rebalanceos en los periodos especificados
@@ -50,7 +50,18 @@ PesosFinalDelPeriodo2 <- gather(PesosFinalDelPeriodo, Acciones, Pesos, -fecha)
 PesosFinalDelPeriodo2 %>%
   ggplot( aes(x=as.Date(fecha), y=Pesos, group=Acciones, color= Acciones)) +
     geom_line() + ggtitle("Evolución de los Pesos de las Acciones FAANG") + labs(x= "Fecha") +
-          geom_vline(xintercept = c(as.Date("2018-01-01"),as.Date("2019-01-01"),as.Date("2020-01-01")) , linetype="dotted",  color = "blue", size=0.9)
+          geom_vline(xintercept = c(
+            as.Date("2016-01-01"),
+            as.Date("2017-01-01"),
+                                    as.Date("2018-01-01"),
+                                    as.Date("2019-01-01"),
+                                    as.Date("2020-01-01"),
+                                    as.Date("2021-01-01"),
+                                    as.Date("2022-01-01")
+                                    ) , linetype="dotted",  color = "blue", linewidth=0.2) +
+  theme_minimal()
 ```
-
+```{r}
+write_rds(FAANG_EqualWeights, "portafolio_FAANG_EW.rds")
+```
 
