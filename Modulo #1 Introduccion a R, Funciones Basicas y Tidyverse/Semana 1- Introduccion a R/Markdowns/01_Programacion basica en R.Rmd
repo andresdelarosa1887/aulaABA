@@ -1,6 +1,8 @@
 ---
 title: "Programacion basica en R"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-12"
 ---
 
@@ -14,8 +16,7 @@ En programación, las estructuras de control son herramientas que permiten contr
 
 Las estructuras de control en R se pueden clasificar en 2 categorías principales:
 
-Estructuras de control condicionales: estas estructuras permiten ejecutar cierto código solo si se cumple una condición determinada. En R, las estructuras de control condicionales más comunes son if, if-else, y switch.
-
+-   **Estructuras de control condicionales:** estas estructuras permiten ejecutar cierto código solo si se cumple una condición determinada. En R, las estructuras de control condicionales más comunes son if, if-else, y switch.
 
 ### If Else
 
@@ -30,10 +31,11 @@ if (x>=5) {
 }
 ```
 
-Estructuras de control de bucles o loops: estas estructuras permiten repetir un bloque de código varias veces. En R, las estructuras de control de bucles más comunes son for, while, y repeat.
+-   **Estructuras de control de bucles o loops:** estas estructuras permiten repetir un bloque de código varias veces. En R, las estructuras de control de bucles más comunes son for, while, y repeat.
 
+En R, los bucles for y while son estructuras de control de flujo que se utilizan para repetir un bloque de código varias veces.
 
-En R, los bucles for y while son estructuras de control de flujo que se utilizan para repetir un bloque de código varias veces. La diferencia entre ellos es que for es un bucle que se utiliza cuando se conoce el número de iteraciones que se deben realizar, mientras que while es un bucle que se utiliza cuando no se conoce el número de iteraciones que se deben realizar.
+La diferencia entre ellos es que for es un bucle que se utiliza cuando se conoce el número de iteraciones que se deben realizar, mientras que while es un bucle que se utiliza cuando no se conoce el número de iteraciones que se deben realizar.
 
 ### For
 
@@ -48,8 +50,7 @@ for (numero in secuencia) {
   }
 ```
 
-
-### While Loop 
+### While Loop
 
 ```{r}
 contador <- 0 
@@ -58,7 +59,4 @@ while (contador <4) {
   contador <- contador + 1 
   print(cuentame)
 }
-
-
 ```
-

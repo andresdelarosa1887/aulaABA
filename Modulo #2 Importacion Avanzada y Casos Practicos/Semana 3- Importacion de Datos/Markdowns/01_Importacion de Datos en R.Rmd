@@ -1,6 +1,8 @@
 ---
 title: "Importacion de Datos en R"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-19"
 ---
 
@@ -47,13 +49,14 @@ PDF_Contraccion <- pdf_text(URL) %>% str_split("\n")
 PDF_Contraccion[[5]][10]
 ```
 
-## Importacion desde una API- Estados de situacion de la Superintendecia de Bancos
+## Importacion desde una API- Estados de situacion de los Bancos Multiples de la Superintendecia de Bancos
 
 ```{r}
 library(jsonlite)
 ## Cargar funcion sb_get
 sb_get <- function(base_url = "https://apis.sb.gob.do/estadisticas", 
-                   end_point, periodo_inicial, tipo_entidad = NULL, entidad = NULL){
+                   end_point, periodo_inicial,
+                   tipo_entidad = NULL, entidad = NULL){
   
   ## Api Key SB
   api_key <- "377833a9f00844b0975025d5f2d2c544"

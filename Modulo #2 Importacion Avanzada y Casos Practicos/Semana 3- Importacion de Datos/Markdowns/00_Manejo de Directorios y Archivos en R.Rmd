@@ -1,6 +1,8 @@
 ---
 title: "Importacion de Datos en R"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-19"
 ---
 
@@ -26,7 +28,7 @@ Estos son los argumentos de la función:
 
 ```{r}
 list.files(
-  path, 
+  "../../Semana 4- Casos Practicos/data/", 
   all.files = FALSE, 
   full.names = FALSE, 
   recursive = FALSE, 
@@ -34,19 +36,11 @@ list.files(
 ) 
 ```
 
-## Especificando un Directorio
-
-```{r}
-directory <- "../rtip-2022-10-24/"
-file_names <- list.files(path = directory)
-print(file_names)
-```
-
 ## Seleccionando Archivos con un Patrón
 
 ```{r}
-# List only files with a specific extension
-pattern <- "\\.txt$"
-file_names <- list.files(pattern = pattern)
-print(file_names)
+nombre_archivos_rds <- list.files("../../Semana 4- Casos Practicos/data/", pattern = "\\.rds$")
+
+print("---Solo Archivos RDS---")
+print(nombre_archivos_rds)
 ```

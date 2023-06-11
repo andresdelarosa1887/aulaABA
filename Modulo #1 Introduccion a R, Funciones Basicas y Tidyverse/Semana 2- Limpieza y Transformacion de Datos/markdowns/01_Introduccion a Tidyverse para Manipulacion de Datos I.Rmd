@@ -17,11 +17,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 
 ##Importar la libreria tidyverse y lubridate para manipulacion de fechas 
-library(tidyverse)
-library(lubridate)
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
 
 ##Importacion de datos
-letras_bc <- read.table("data/letras_bc_consolidado_clean.csv")
+letras_bc <- read.table("../../../data/letras_bc_consolidado_clean.csv")
 
 ##Seleccionando Columnas
 letras_bc_selected_cols <- letras_bc |>
@@ -49,7 +49,8 @@ glimpse(letras_monto_subastado_5000)
 
 ```{r}
 letras_monto_subastado_5000 <- letras_bc |>
-  select(FechadeSubasta, FechaLiquidacion, MontoAdjudicado,RendimientoPPA) |> 
+  select(FechadeSubasta, FechaLiquidacion, MontoAdjudicado,
+         RendimientoPPA) |> 
   filter(MontoAdjudicado==5000) %>% 
   mutate(RendimientoPPA= RendimientoPPA*100, 
          RendimientoPPA= 1-RendimientoPPA

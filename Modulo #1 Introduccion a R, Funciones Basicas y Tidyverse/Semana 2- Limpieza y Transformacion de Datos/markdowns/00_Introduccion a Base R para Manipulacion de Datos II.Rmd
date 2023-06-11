@@ -16,7 +16,7 @@ Ya que sabemos manipular los nombres de las columnas de los dataframes, es impor
 
 ```{r}
 ##Leemos la tabla de letras
-letras_bc <- read.table("data/letras_bc_consolidado_clean.csv")
+letras_bc <-  read.table("../../../data/letras_bc_consolidado_clean.csv")
 
 ##Creamos un nuevo dataframe
 nuevas_letras <- data.frame( 
@@ -45,9 +45,11 @@ rbind(): se utiliza para unir dos o más objetos por filas, es decir, apilarlos 
 ##No puedo realizar la concatenacion porque el nombre de las columnas no es igual
 # rbind(letras_bc, nuevas_letras)
 
-##Dado este analisis  de diferencias de columnas modificoo el nombre de la columna para poder realizar la concatenacion
+##Dado este analisis  de diferencias de columnas modificoo el nombre
+#de la columna para poder realizar la concatenacion
 colnames(nuevas_letras)[1] <- "FechadeSubasta"
-letras_bc_actualizado <- rbind(letras_bc, nuevas_letras) ##Procedo a realizar la concatenacion sin temas
+letras_bc_actualizado <- rbind(letras_bc, nuevas_letras) ##Procedo
+#a realizar la concatenacion sin temas
 
 ##Verifico que realmente se realizo la concatenacion
 cantidad_registros_nuevos <- nrow(letras_bc_actualizado) - nrow(letras_bc)
@@ -59,8 +61,11 @@ tail(letras_bc_actualizado) ##Veo mi dataset
 cbind(): se utiliza para unir dos o más objetos por columnas, es decir, agregarlos horizontalmente. La función cbind() espera que los objetos tengan el mismo número de filas, ya que agrega las columnas a la derecha de la última columna de cada objeto.
 
 ```{r}
-# Creamos un nuevo dataframe con informacion nueva de letras, en este ejemplo un rankeo
-nueva_info_letras <- data.frame(rankeo= seq(1, nrow(letras_bc), by=1)) #Se utiliza la funcion nrows para obtener el numero de filas 
+# Creamos un nuevo dataframe con informacion nueva de letras,
+#en este ejemplo un rankeo
+nueva_info_letras <- data.frame(rankeo= seq(1,
+                                            nrow(letras_bc), by=1)) 
+#Se utiliza la funcion nrows para obtener el numero de filas 
 #Lo unimos de manera horizontal al dataframe original
 head(cbind(letras_bc, nueva_info_letras))
 
@@ -84,19 +89,31 @@ Por defecto, si no se especifican los valores de `all.x y all.y`, la función me
 
 ```{r}
 
-##Creamos una columna de FechaSubasta utilizando una secuencia de fechas de la fecha minima de subasta de nuestro dataframe original hasta la fecha maxima por dia
+##Creamos una columna de FechaSubasta utilizando una secuencia de
+#fechas de la fecha minima de subasta de nuestro dataframe original
+#hasta la fecha maxima por dia
 
-##Creamos una segunda columna que aleatoriamente nos dira 1 si fue declarado desierto y 0 si no fue declarada desierta
+##Creamos una segunda columna que aleatoriamente nos dira 1 si 
+#fue declarado desierto y 0 si no fue declarada desierta
+
 subasta_desierta <- data.frame(
-  "FechadeSubasta" = seq(as.Date(min(letras_bc$FechadeSubasta)),as.Date(max(letras_bc$FechadeSubasta)), by="day" ), 
-  "DeclaradaDesierta"= sample(c(1,0),length(seq(as.Date(min(letras_bc$FechadeSubasta)),as.Date(max(letras_bc$FechadeSubasta)), by="day" )), TRUE)
+  "FechadeSubasta" = seq(as.Date(min(letras_bc$FechadeSubasta)),
+                         as.Date(max(letras_bc$FechadeSubasta)), by="day" ), 
+  "DeclaradaDesierta"= sample(c(1,0),length(seq(as.Date(min(letras_bc$FechadeSubasta)),
+                                                as.Date(max(letras_bc$FechadeSubasta)),
+                                                by="day" )), TRUE)
 )
 
-##Este nuevo dataframe lo queremos unir con las letras del BC. Esta union lo hacemos por la FechadeSubasta
+##Este nuevo dataframe lo queremos unir con las letras del BC.
+#Esta union lo hacemos por la FechadeSubasta
 letras_bc$FechadeSubasta <- as.Date(letras_bc$FechadeSubasta)
 
-##En este caso hacemos un left join porque nos interesa toda la informacion que esta en el dataframe x (letras_bc), pero no toda la informacion que esta en el dataframe y (subasta_desierta)
-merged_letras_bc <- merge(letras_bc, subasta_desierta, all.x= TRUE, all.y=FALSE)
+##En este caso hacemos un left join porque nos interesa toda la
+#informacion que esta en el dataframe x (letras_bc), pero no toda 
+#la informacion que esta en el dataframe y (subasta_desierta)
+
+merged_letras_bc <- merge(letras_bc, subasta_desierta,
+                          all.x= TRUE, all.y=FALSE)
 head(merged_letras_bc)
 
 ```

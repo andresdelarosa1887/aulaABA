@@ -1,13 +1,14 @@
 ---
 title: "Tipos y estructuras de datos basicos"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-09"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
 
 ## Vectores
 
@@ -24,6 +25,7 @@ secuencia
 ```
 
 ## Matrices
+
 En R, una matriz es un objeto que contiene una colección de valores numéricos, lógicos o de caracteres organizados en filas y columnas. Se pueden realizar operaciones matemáticas en las matrices, como la multiplicación, suma, resta, entre otras.
 
 ```{r}
@@ -49,7 +51,6 @@ data_frame_1 <- data.frame(
 data_frame_1
 ```
 
-
 ## Listas
 
 En R, una lista es un objeto que puede contener cualquier tipo de datos, como vectores, matrices, data frames, funciones, otras listas, entre otros.
@@ -66,8 +67,3 @@ mi_primera_lista$matriz
 mi_primera_lista[[4]]
 
 ```
-
-
-
-
-

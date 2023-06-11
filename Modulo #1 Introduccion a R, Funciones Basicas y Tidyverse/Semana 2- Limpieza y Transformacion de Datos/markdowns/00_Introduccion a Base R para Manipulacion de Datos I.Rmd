@@ -1,8 +1,8 @@
 ---
-title: "Introducción a Base R para Manipulación de Datos I"
+title: "Introduccion a Base R para Manipulación de Datos I"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 date: "2023-05-13"
 ---
 
@@ -16,13 +16,13 @@ En esta sección utilizaremos las letras del Banco Central de la República Domi
 
 **Letras del Banco Central**: Instrumentos financieros emitidos a plazos de hasta un año, cuya rentabilidad viene dada por la diferencia entre el precio de adquisición y su valor al vencimiento o valor par.
 
-Fuente: <https://cdn.bancentral.gov.do/documents/instrumentos-de-inversion/instrumentos-operaciones-de-mercado-abierto/documents/letras_bc_consolidado.xlsx?v=1684020088887>{#Link a Letras}
+Fuente: [Banco Central](https://cdn.bancentral.gov.do/documents/instrumentos-de-inversion/instrumentos-operaciones-de-mercado-abierto/documents/letras_bc_consolidado.xlsx?v=1684020088887)
 
 La función `read.table()` en R se utiliza para importar datos tabulares desde un archivo de texto o csv en un dataframe.
 
 ```{r}
 ##Leemos la tabla de letras
-letras_bc <- read.table("data/letras_bc_consolidado_clean.csv")
+letras_bc <- read.table("../../../data/letras_bc_consolidado_clean.csv")
 ```
 
 ## Slicing
@@ -35,7 +35,8 @@ La notación es:
 
 ```{r}
 letras_bc[1:3,]
-letras_bc[1:2, c("FechadeSubasta", "FechaLiquidacion", "MontoSubastado", "RendimientoPPA" )]
+letras_bc[1:2, c("FechadeSubasta", "FechaLiquidacion", 
+                 "MontoSubastado", "RendimientoPPA" )]
 ```
 
 ## Filtering
@@ -46,8 +47,13 @@ En Base R, la técnica de filtrado de datos se puede realizar utilizando la func
 ##Indexacion de expresiones logicas
 letras_monto_subastado_5000 <- letras_bc[letras_bc$MontoSubastado==5000, ]
 head(letras_monto_subastado_5000)
+
+```
+
+```{r}
 ##Uso de subset
-letras_monto_subastado_mayor_5000 <- subset(letras_bc, MontoSubastado>5000)
+letras_monto_subastado_mayor_5000 <- subset(letras_bc,
+                                            MontoSubastado>5000)
 head(letras_monto_subastado_mayor_5000)
 ```
 
@@ -63,7 +69,9 @@ esta es la sintaxis: `dataframe$nombre_columna`
 
 letras_monto_subastado_5000$RendimientoPPA2 <- (letras_monto_subastado_5000$RendimientoPPA *100)
 head(letras_monto_subastado_5000)
-letras_monto_subastado_5000 <- transform(letras_monto_subastado_5000, MontoSubastadoUS = MontoSubastado*56)
+
+letras_monto_subastado_5000 <- transform(letras_monto_subastado_5000,
+                                         MontoSubastadoUS = MontoSubastado*56)
 head(letras_monto_subastado_5000)
 ```
 
@@ -76,13 +84,15 @@ Para modificar una columna en un dataframe podemos sobre-escribir la misma colum
 La función `colnames()` permite cambiar los nombres de las columnas de un dataframe. Para utilizarla, se debe asignar un vector de nombres de igual longitud que el número de columnas del dataframe a la función colnames().
 
 ```{r}
-colnames(letras_bc)[1:3] <- c("FechaLiquidacion", "FechaSubasta", "Monto")
+colnames(letras_bc)[1:3] <- c("FechaLiquidacion", "FechaSubasta", 
+                              "Monto")
 head(letras_bc)
 ```
 
 La función `names()` permite cambiar los nombres de las columnas de un dataframe, de la misma manera que la función colnames(). La única diferencia es que names() es más genérica y también se puede utilizar para cambiar los nombres de las filas de una matriz.
 
 ```{r}
-names(letras_bc)[1:3] <- c("FechaSubasta", "FechaLiquidacion", "MontoSubastado")
+names(letras_bc)[1:3] <- c("FechaSubasta", "FechaLiquidacion",
+                           "MontoSubastado")
 head(letras_bc)
 ```

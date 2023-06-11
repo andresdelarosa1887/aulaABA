@@ -24,32 +24,45 @@ knitr::opts_chunk$set(echo = TRUE)
 
 -   `anti_join()`: Devuelve las filas del primer data frame que no tienen coincidencias en el segundo data frame.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 ##Importar la libreria tidyverse y lubridate para manipulacion de fechas 
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(lubridate))
+
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
 
 ##Importacion de datos
-letras_bc <- read.table("data/letras_bc_consolidado_clean.csv")
+letras_bc <- read.table("../../../data/letras_bc_consolidado_clean.csv")
 
-##Creamos una columna de FechaSubasta utilizando una secuencia de fechas de la fecha minima de subasta de nuestro dataframe original hasta la fecha maxima por dia
+# Creamos una columna de FechaSubasta utilizando una secuencia
+#de fechas de la fecha minima de subasta de nuestro dataframe original 
+#hasta la fecha maxima por dia
 
-##Creamos una segunda columna que aleatoriamente nos dira 1 si fue declarado desierto y 0 si no fue declarada desierta
+##Creamos una segunda columna que aleatoriamente nos dira 1 si fue
+#declarado desierto y 0 si no fue declarada desierta
 subasta_desierta <- data.frame(
-  "FechadeSubasta" = seq(as.Date(min(letras_bc$FechadeSubasta)),as.Date(max(letras_bc$FechadeSubasta)), by="day" ), 
-  "DeclaradaDesierta"= sample(c(1,0),length(seq(as.Date(min(letras_bc$FechadeSubasta)),as.Date(max(letras_bc$FechadeSubasta)), by="day" )), TRUE)
+  "FechadeSubasta" = seq(as.Date(min(letras_bc$FechadeSubasta)),
+                         as.Date(max(letras_bc$FechadeSubasta)), by="day" ), 
+  "DeclaradaDesierta"= sample(c(1,0),
+ length(seq(as.Date(min(letras_bc$FechadeSubasta)),
+  as.Date(max(letras_bc$FechadeSubasta)),
+  by="day" )), TRUE)
 )
 
-##Transformamos la columna fecha de subasta en formato de fecha ya que estaba en caracter
+##Transformamos la columna fecha de subasta en formato de fecha
+#ya que estaba en caracter
 
 letras_bc$FechadeSubasta <- as.Date(letras_bc$FechadeSubasta)
 
 ##Haciendo left join
-union_de_desiertas <- left_join(letras_bc, subasta_desierta, by="FechadeSubasta")
+union_de_desiertas <- left_join(letras_bc, subasta_desierta,
+                                by="FechadeSubasta")
 glimpse(union_de_desiertas)
 
-##Utilizamos la funcion anti join para ver los registros que no se unieron del dataset subasta_desierta con las letras_bc
-registros_no_unidos <- anti_join(subasta_desierta, letras_bc, by="FechadeSubasta")
+##Utilizamos la funcion anti join para ver los registros
+#que no se unieron del dataset subasta_desierta con las letras_bc
+
+registros_no_unidos <- anti_join(subasta_desierta, letras_bc,
+                                 by="FechadeSubasta")
 glimpse(registros_no_unidos)
 
 
@@ -88,9 +101,9 @@ head(letras_mes_columnas)
 
 ### Pivot Longer
 
-`pivot_longer():` Permite transformar un data frame de formato ancho a largo.
+![](images/pivot_longer_new-01.png)
 
-![Pivot Longer](images/pivot_longer_new.png){width="1167"}
+`pivot_longer():` Permite transformar un data frame de formato ancho a largo.
 
 ```{r}
 ###Usando el pivot longer ajustamos la informacion transformada con el pivot wider
@@ -102,7 +115,7 @@ restaurando_dataset <- letras_mes_columnas |>
     values_to = "totalDemandado"
   )
 
-restaurando_dataset
+head(restaurando_dataset)
 ```
 
 `gather()` y `spread()`: Estas funciones también permiten transformar data frames entre formato largo y ancho.

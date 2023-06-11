@@ -1,6 +1,8 @@
 ---
 title: "Funciones Financieras en R"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-11"
 ---
 
@@ -27,7 +29,7 @@ valor_presente <- function(valor_futuro,  tasa_de_descuento, numero_periodos) {
 
 Como habia mencionado, las funciones en R son bastantes poderosas porque nos permiten calcular sin tener que repetir bloques de codigo. Por ejemplo, si tenemos diferentes opciones de inversion y queremos calcular y comparar el valor presente de cada una de estas opciones considerando el valor temporal del dinero y la tasa de descuento que refleje el costo de oportunidad de nuestro dinero.
 
-```{r}
+```{r paged.print=TRUE}
 
 vector_valores_futuros <- seq(100, 1000, by=100)
 vector_tasa_de_descuento <- seq(0.05, 0.09, by=0.005)
@@ -44,7 +46,7 @@ for (valor_futuro in vector_valores_futuros) {
                                      "Periodos:", periodos, 
                                      "Valor Presente:",
                                      valor_presente(valor_futuro, tasa_de_descuento, periodos))
-      print(vector_valor_presente)
+     # print(vector_valor_presente)
       }}}
 ```
 
