@@ -58,12 +58,6 @@ fechaliquidacionformatoorg$ano_liquidacion <- substr(fechaliquidacionformatoorg$
 
 fechaliquidacionformatoorg[4,10] <- "2023"
 
-
-fechaliquidacionformatoorg <- fechaliquidacionformatoorg[,
-                                                         c("FechaSubasta","FechaLiquidacion","MontoSubastado","MontoDemandado",          
-                                                           "MontoAdjudicado ","RendimientoPPA","FechaSubasta_formato","FechaLiquidacion_formato")
-]
-
 fechaliquidacionformatoorg$FechaLiquidacion <- as.Date(
   paste0(
     fechaliquidacionformatoorg$ano_liquidacion, "-",
@@ -71,6 +65,15 @@ fechaliquidacionformatoorg$FechaLiquidacion <- as.Date(
     fechaliquidacionformatoorg$dia_liquidacion 
   )
 )
+
+
+
+
+fechaliquidacionformatoorg <- fechaliquidacionformatoorg[,
+                                                         c("FechaSubasta","FechaLiquidacion","MontoSubastado","MontoDemandado",          
+                                                           "MontoAdjudicado ","RendimientoPPA","FechaSubasta_formato","FechaLiquidacion_formato")
+]
+
 
 
 
@@ -82,6 +85,8 @@ fechaliquidacionformatoexcel$FechaLiquidacion <- as.Date(
 
 
 setdiff(colnames(fechaliquidacionformatoorg), colnames(fechaliquidacionformatoexcel))
+
+
 
 letras_fechas_listas <- rbind(fechaliquidacionformatoexcel, fechaliquidacionformatoorg)
 

@@ -1,0 +1,72 @@
+---
+title: "PerformanceAnalytics"
+subtitle: "R con Enfoque Financiero: AulaABA "
+output:
+  pdf_document: default
+  html_document: default
+date: "2023-06-01"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Performace Analytics
+
+El paquete `PerformaceAnalytics` es una colección de funciones econométricas para el análisis de rendimiento y riesgo.
+
+Además de las métricas estándar de riesgo y rendimiento, este paquete tiene como objetivo ayudar a los profesionales e investigadores a utilizar las últimas investigaciones en el análisis de flujos de retornos no normales.
+
+En general, se ha probado más en datos de retornos (en lugar de precios) en una escala regular, pero la mayoría de las funciones también funcionarán con datos de retornos irregulares, y cada vez más funciones funcionarán con datos de ganancias y pérdidas o precios cuando sea posible.
+
+Podemos auxiliarnos de quantmod para importar los datos diarios de las acciones y realizar analisis sobre los mismos utilizando Performance Analytics.
+
+```{r}
+suppressWarnings(suppressPackageStartupMessages(library(PerformanceAnalytics)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+
+
+FAANG <- c("AAPL", "GOOGL", "AMZN", "META", "NFLX")
+getSymbols(FAANG, from= "2015-01-01", to= today())
+
+##Usando solo quantmod
+retornos_diarios <- merge(dailyReturn(Cl(AAPL)),dailyReturn(Cl(GOOGL)),
+                          dailyReturn(Cl(AMZN)), dailyReturn(Cl(META)),
+                          dailyReturn(Cl(NFLX)))
+colnames(retornos_diarios) <- c("AAPL", "GOOGL", "AMZN", "META", "NFLX")
+
+
+##Usando Performance Analytics
+retornos_diarios <-  Return.calculate(FAANG_data)
+head(retornos_diarios)
+```
+
+
+El Value at Risk (VaR), que se traduce al español como Valor en Riesgo o Valor de Riesgo, es una medida ampliamente utilizada en finanzas para evaluar y cuantificar el riesgo de pérdida potencial en una inversión o cartera de inversión. Es una medida estadística que proporciona una estimación del máximo monto de pérdida esperada (en términos de valor monetario o porcentaje) en un nivel de confianza específico y para un horizonte de tiempo determinado.
+
+
+Si tienes un Value at Risk (VaR) del -0.03 con un intervalo de confianza del 95% para los retornos diarios, significa que existe una probabilidad del 95% de que las pérdidas diarias no excedan el valor de -0.03.
+
+
+El método "Gaussian VaR" (VaR Gaussiano) en el gráfico chart.VaRSensitivity de la librería "PerformanceAnalytics" en R se refiere a una aproximación del Value at Risk (VaR) basada en la suposición de que los retornos siguen una distribución normal o gaussiana.
+
+```{r}
+
+chart.Histogram(retornos_diarios$AAPL, methods = c("add.density","add.centered"))
+
+chart.VaRSensitivity(retornos_diarios$GOOGL, 
+                     methods=c("HistoricalVaR","GaussianVaR"), 
+                     colorset=bluefocus, lwd=2)
+
+```
+
+
+```{r}
+library(performanceanalytics)
+
+table.Stats(retornos_diarios)
+table.Drawdowns(retornos_diarios$AAPL, top=10, geometric= TRUE)
+table.AnnualizedReturns(retornos_diarios)
+
+```

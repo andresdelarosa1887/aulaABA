@@ -1,7 +1,11 @@
 ---
-title: " Grafico de Dispersion- Instrumentos de Renta Fija (precio de un bono y los días al vencimiento )"
-output: html_document
+title: " Gráfico de Dispersion- Instrumentos de Renta Fija (precio de un bono y los
+  días al vencimiento )"
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-05-27"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -25,7 +29,7 @@ La función **`geom_point()`** en ggplot2 también tiene varios argumentos que p
 
 -   **`...`**: Al igual que con **`geom_bar()`**, el argumento de puntos suspensivos **`...`** te permite pasar parámetros gráficos adicionales para personalizar la apariencia de los puntos, como **`shape`**, **`size`**, **`color`** y otros.
 
-Estos son solo algunos de los argumentos más comúnmente utilizados de **`geom_point()`**. Puedes encontrar más detalles y opciones adicionales en la documentación oficial de ggplot2: [**https://ggplot2.tidyverse.org/reference/geom_point.html**](https://ggplot2.tidyverse.org/reference/geom_point.html)
+Estos son solo algunos de los argumentos más comúnmente utilizados de **`geom_point()`**. Puedes encontrar más detalles y opciones adicionales en la documentación oficial de ggplot2: [Documentacion Geom Point](https://ggplot2.tidyverse.org/reference/geom_point.html)
 
 ## Grafico de Dispersion- Instrumentos de Renta Fija (precio de un bono y los días al vencimiento )
 
@@ -39,18 +43,22 @@ Es importante tener en cuenta que la relación entre el precio del bono y los d�
 
 En resumen, a medida que los días al vencimiento disminuyen, el precio del bono tiende a acercarse a su valor nominal, mientras que a medida que los días al vencimiento aumentan, el precio del bono tiende a ser más sensible a los cambios en las tasas de interés.
 
+```{r include=FALSE}
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+
+opdiarias_rv <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
+opdiarias_rv <- na.omit(opdiarias_rv)
+
+opdiarias_rf <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
+opdiarias_rf <- na.omit(opdiarias_rf)   
+
+```
+
+
 ```{r}
-opdiarias_rf <- readRDS("../../Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
-
-##  La relacion entre el precio la cantidad e coutas transadas para renta variable 
-
-
-opdiarias_rf <- na.omit(opdiarias_rf)
-
-##  Relacion entre el precio y la cantidad de cuotas transadas (Grafico de dispersion)
-## Relacion entre el precio y la tasa de cupon de un instrumento financiero
-
-
 ##Creo el modelo de regresion lineal 
 x=as.numeric(opdiarias_rf$`Días Venc.`)
 y= as.numeric(opdiarias_rf$`Precio`)
@@ -64,12 +72,17 @@ ggplot(data = opdiarias_rf, aes(x = as.numeric(`Días Venc.`) , y =  as.numeric(
   geom_point(aes(color = `Cód. Local`)) +
   geom_smooth(method = "lm", se = TRUE, color = "red") + 
   geom_text(x = x_minimo, y = y_maximo, 
-            label = paste("y =", round(coef(modelo)[1], 2), "+", round(coef(modelo)[2], 4), "* x"), hjust = 0, vjust = 1) + 
+            label = paste("y =", round(coef(modelo)[1], 2), "+", 
+                          round(coef(modelo)[2], 4), "* x"),
+            hjust = 0, vjust = 1) + 
   labs(x = "Dias al Vencimiento",
        y = "Precio del Título de Renta Fija",
        title = "Precio de los Bonos Transados y los Días al Vencimiento", 
-       subtitle =  paste("De", min(opdiarias_rf$fecha_operacion), "a",
-                         max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion)), 
+       subtitle =  paste("De",
+                         min(opdiarias_rf$fecha_operacion),
+                         "a",
+                         max(
+          opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion)), 
        caption= "Datos de la BVRD") + 
   scale_color_discrete(name = "`Cód. Local`") +
   theme_classic() + 

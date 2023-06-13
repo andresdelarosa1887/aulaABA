@@ -1,5 +1,6 @@
 ---
 title: "Introducción a Base R para Manipulación de Datos II"
+subtitle: "R con Enfoque Financiero: AulaABA "
 output:
   pdf_document: default
   html_document: default

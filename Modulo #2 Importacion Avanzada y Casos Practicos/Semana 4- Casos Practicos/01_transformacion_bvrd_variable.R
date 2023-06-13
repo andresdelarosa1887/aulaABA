@@ -64,19 +64,8 @@ for (archivo in list.files("data/", pattern = "operaciones_diarias_rv")){
 
 listado_operaciones_diarias = do.call(rbind, listado_operaciones_diarias)
 rownames(listado_operaciones_diarias) <- NULL
-write_rds(listado_operaciones_diarias, "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
-
-
-
-
-
-
-
-
-
-
-
-
+write_rds(listado_operaciones_diarias,
+          "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
 
 
 
@@ -113,7 +102,8 @@ for (archivo in list.files("data/", pattern="emisionescorp_vigentes_rf")){
 listado_emisiones_corp_vigentes = do.call(rbind, listado_emisiones_corp_vigentes)
 rownames(listado_emisiones_corp_vigentes) <- NULL
 
-write_rds(listado_emisiones_corp_vigentes, "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/emisiones_corp_vigentes_rf.rds")
+write_rds(listado_emisiones_corp_vigentes,
+          "Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/emisiones_corp_vigentes_rf.rds")
 
 
 ##################  Renta variable, Mercado Secundario los 15 Títulos más Transados en el Mes ################## 

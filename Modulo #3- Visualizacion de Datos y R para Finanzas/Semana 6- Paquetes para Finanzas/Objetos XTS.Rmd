@@ -1,6 +1,9 @@
 ---
-title: "00_Objetos XTS"
-output: html_document
+title: "Objetos XTS"
+subtitle: "R con Enfoque Financiero: AulaABA "
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-06-01"
 ---
 
@@ -25,14 +28,22 @@ Las características clave de los objetos "xts" incluyen:
 -   Compatibilidad con funciones de análisis de series de tiempo: Los objetos "xts" se integran bien con paquetes y funciones populares de análisis de series de tiempo en R, como "quantmod", "forecast", "TTR" (Technical Trading Rules), entre otros. Esto facilita el análisis, la modelización y la visualización de datos temporales.
 
     En resumen, los objetos "xts" en R proporcionan una estructura de datos eficiente y especializada para el manejo y análisis de series de tiempo. Su diseño optimizado para datos temporales y su integración con otras herramientas de análisis de series de tiempo hacen que sean una opción poderosa para trabajar con datos temporales en R.
+    
+    
+```{r include=FALSE}
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+
+opdiarias_rv <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
+opdiarias_rv <- na.omit(opdiarias_rv)
+
+```
+
 
 ```{r}
-library(xts)
-library(tidyverse)
-library(lubridate)
-
-opdiarias_rv <- readRDS("//Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
-opdiarias_rv <- na.omit(opdiarias_rv)
+suppressWarnings(suppressPackageStartupMessages(library(xts)))
 
 un_instrumento_frecuente <- opdiarias_rv %>%select("codigo_local"= `Cód. Local`,
                                                    fecha_operacion
@@ -58,7 +69,7 @@ CP1EX201 <- opdiarias_xts %>% filter(codigo_local %in% c("CP1EX201")) %>%
 CP1EX201 <- xts(CP1EX201$High, order.by= CP1EX201$fecha_operacion)
 colnames(CP1EX201)[1] <- "CP1EX201"
 
-chart.TimeSeries(CP1EX201)
+chartSeries(CP1EX201)
 ```
 
 -   `as.xts()`: Convierte un objeto de datos en un objeto "xts". Esta función es útil cuando se trabaja con datos en otros formatos y se desea convertirlos a un formato compatible con "xts".

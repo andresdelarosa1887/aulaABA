@@ -1,7 +1,10 @@
 ---
 title: "Introduccion a ggplot"
-output: html_document
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-05-27"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}

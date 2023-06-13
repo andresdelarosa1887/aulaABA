@@ -1,5 +1,6 @@
 ---
 title: "Programacion basica en R"
+subtitle: "R con Enfoque Financiero: AulaABA "
 output:
   pdf_document: default
   html_document: default

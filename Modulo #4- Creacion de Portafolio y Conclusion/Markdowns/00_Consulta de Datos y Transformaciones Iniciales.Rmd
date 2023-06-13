@@ -1,5 +1,6 @@
 ---
 title: "Consulta de Datos y Transformaciones Iniciales"
+subtitle: "R con Enfoque Financiero: AulaABA "
 output: html_document
 date: "2023-06-06"
 ---

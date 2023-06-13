@@ -1,6 +1,9 @@
 ---
-title: "00_ETL Letras BC"
-output: html_document
+title: "ETL Letras Banco Central de la República Dominicana"
+subtitle: "R con Enfoque Financiero: AulaABA "
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-22"
 ---
 
@@ -8,33 +11,165 @@ date: "2023-05-22"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Importamos la libreria y los datos ya descargados localmente del BC
+## Importamos la librería y los datos ya descargados localmente del BC
 
 ```{r}
-library(readxl)
-library(stringr)
-library(lubridate) ##para utilizar la funcion year
+suppressWarnings(suppressPackageStartupMessages(library(readxl)))
+suppressWarnings(suppressPackageStartupMessages(library(stringr)))
 
 ##Montos Colocados y Tasa de Rendimiento Promedio Ponderada 2007-2023
-letras_bc_consolidado_raw <- suppressMessages(suppressWarnings(read_excel("data/letras_bc_consolidado_raw.xlsx")))
+letras_bc_consolidado_raw <- suppressMessages(suppressWarnings(
+  read_excel("../data/letras_bc_consolidado_raw.xlsx")))
 ```
 
-## 
-
-You can also embed plots, for example:
+## Acotamos a las filas y columnas que necesitamos del documento.También, le cambiamos los nombres a las columnas y omitimos los valores nulos, que significan las subastas desiertas. 
 
 ```{r}
 
 letras_bc_consolidado_raw <- letras_bc_consolidado_raw[5:nrow(letras_bc_consolidado_raw), 2:7]
-colnames(letras_bc_consolidado_raw) <- c("FechadeSubasta", 
-                                         "FechaLiquidacion",
-                                         "MontoSubastado", 
+
+colnames(letras_bc_consolidado_raw) <- c("FechaSubasta",
+                                         "FechaLiquidacion", 
+                                         "MontoSubastado",
                                          "MontoDemandado",
-                                         "MontoAdjudicado", 
+                                         "MontoAdjudicado ",
                                          "RendimientoPPA")
 
 letras_bc_consolidado_raw <- na.omit(letras_bc_consolidado_raw)
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Transformación de la Fecha de la Subasta
+Primero creamos un indicador que nos dira que tipo de fecha hay en cada columna: 
+
+- Si la fecha esta en el formato  `19/02/2010` entonces extraemos cada parte de la fecha y creamos una columna para el dia, el mes y el años utilizando la funcion `substr` y luego concatenamos estas columnas usando la funcion `paste0` y `as.Date` para convertir nuestra columna de fecha subasta. 
+
+- Si la fecha se encuentra en el formato númerico, que proviene de excel, simplemente utilizamos la funcion `as.Date(vector_columnas, origin="1899-12-30")` que nos convertira las fechas al formato de R. 
+
+Para cada uno de estos casos de fecha creamos un dataframe, luego le quitamos las columnas que sobran, como por ejemplo en el caso uno eliminamos los dia_subasta, mes_subasta y año subasta. Para así concatenar los dataframes y tener la data completa con la fecha de subasta lista para nuestros análisis. 
+
+
+
+```{r}
+
+#Creamos el indicador
+letras_bc_consolidado_raw$FechaSubasta_formato <- ifelse(
+  str_detect(string = letras_bc_consolidado_raw$FechaSubasta, pattern = "/"), 1, 0)
+
+#Filtramos solamente las fechas que contienen el patron "19/02/2010"
+fechasubastaformatoorg <- 
+  letras_bc_consolidado_raw[letras_bc_consolidado_raw$FechaSubasta_formato==1, ]
+# Creamos las columnas de dia, mes y año para luego concatenar
+fechasubastaformatoorg$dia_subasta <- substr(fechasubastaformatoorg$FechaSubasta, 1,2)
+fechasubastaformatoorg$mes_subasta <- substr(fechasubastaformatoorg$FechaSubasta, 4,5)
+fechasubastaformatoorg$ano_subasta <- substr(fechasubastaformatoorg$FechaSubasta, 7,10)
+fechasubastaformatoorg$FechaSubasta <- as.Date(
+  paste0(
+    fechasubastaformatoorg$ano_subasta, "-",
+    fechasubastaformatoorg$mes_subasta, "-",
+    fechasubastaformatoorg$dia_subasta 
+  )
+)
+# Acotamos a las columnas que necesitamos
+fechasubastaformatoorg <- fechasubastaformatoorg[,c( "FechaSubasta","FechaLiquidacion",
+                                                     "MontoSubastado","MontoDemandado",      
+                                                     "MontoAdjudicado ","RendimientoPPA",
+                                                     "FechaSubasta_formato") ]
+# Filtramos solamente las fechas que estan en formato numerico de excel
+fechasubastaformatoexcel <- 
+  letras_bc_consolidado_raw[!letras_bc_consolidado_raw$FechaSubasta_formato==1, ]
+# Aplicamos la funcion de R que nos ayuda a convertir esas fechas 
+fechasubastaformatoexcel$FechaSubasta <- as.Date(
+  as.numeric(fechasubastaformatoexcel$FechaSubasta), origin= "1899-12-30"
+)
+
+# Verificamos que las columnas hacen match para la concatenacion vertical
+#intersect(colnames(fechasubastaformatoorg), colnames(fechasubastaformatoexcel))
+
+#Aplicamos la concatenación vertical
+fechasubastalista <- rbind(fechasubastaformatoorg,fechasubastaformatoexcel )
+head(fechasubastalista)
+```
+
+## Transformación de la Fecha de Liquidación
+A partir del dataframe `fechasubastalista` creamos un indicador que nos dira que tipo de fecha hay en cada columna: 
+
+- Si la fecha esta en el formato  `19/02/2010` entonces extraemos cada parte de la fecha y creamos una columna para el dia, el mes y el años utilizando la funcion `substr` y luego concatenamos estas columnas usando la funcion `paste0` y `as.Date` para convertir nuestra columna de fecha liquidación. 
+
+- Si la fecha se encuentra en el formato númerico, que proviene de excel, simplemente utilizamos la funcion `as.Date(vector_columnas, origin="1899-12-30")` que nos convertira las fechas al formato de R. 
+
+Para cada uno de estos casos de fecha creamos un dataframe, luego le quitamos las columnas que sobran, como por ejemplo en el caso uno eliminamos los dia_liquidación, mes_liquidación y año liquidación. Para así concatenar los dataframes y tener la data completa con la fecha de liquidación lista para nuestros análisis. 
+
+Como ya tenemos el dataframe con la fecha de subasta lista entonces procedemos a convertir los valores numericos a numericos ya que fueron importados como caracteres. 
+
+```{r}
+
+#A partir del dataframe con la fecha subasta lista creamos el indicador del patron de la fecha
+fechasubastalista$FechaLiquidacion_formato <- ifelse(
+  str_detect(string = fechasubastalista$FechaLiquidacion, pattern = "/"), 1, 0)
+
+
+#Filtramos solamente las fechas que contienen el patron "19/02/2010"
+fechaliquidacionformatoorg <- fechasubastalista[fechasubastalista$FechaLiquidacion_formato==1, ]
+
+# Creamos las columnas de dia, mes y año para luego concatenar
+fechaliquidacionformatoorg$dia_liquidacion <- 
+    substr(fechaliquidacionformatoorg$FechaLiquidacion, 1,2)
+fechaliquidacionformatoorg$mes_liquidacion <- 
+    substr(fechaliquidacionformatoorg$FechaLiquidacion, 4,5)
+fechaliquidacionformatoorg$ano_liquidacion <- 
+    substr(fechaliquidacionformatoorg$FechaLiquidacion, 7,10)
+
+#Aplicamos un cambio manual para una situación específica
+fechaliquidacionformatoorg[4,10] <- "2023"
+
+# Concatenamos las columnas para obtener la fecha de liquidacion de ese patron
+fechaliquidacionformatoorg$FechaLiquidacion <- as.Date(
+  paste0(
+    fechaliquidacionformatoorg$ano_liquidacion, "-",
+    fechaliquidacionformatoorg$mes_liquidacion, "-",
+    fechaliquidacionformatoorg$dia_liquidacion 
+  )
+)
+
+
+# Acotamos a las columnas que necesitamos
+fechaliquidacionformatoorg <- fechaliquidacionformatoorg[,
+  c("FechaSubasta","FechaLiquidacion",
+  "MontoSubastado","MontoDemandado",          
+ "MontoAdjudicado ","RendimientoPPA",
+ "FechaSubasta_formato","FechaLiquidacion_formato")
+]
+
+
+
+# Filtramos solamente las fechas que estan en formato numerico de excel
+fechaliquidacionformatoexcel <- fechasubastalista[!fechasubastalista$FechaLiquidacion_formato==1, ]
+# Aplicamos la funcion de R que nos ayuda a convertir esas fechas 
+fechaliquidacionformatoexcel$FechaLiquidacion <- as.Date(
+  as.numeric(fechaliquidacionformatoexcel$FechaLiquidacion), origin= "1899-12-30"
+)
+
+# Verificamos que las columnas hacen match para la concatenacion vertical
+#setdiff(colnames(fechaliquidacionformatoorg), colnames(fechaliquidacionformatoexcel))
+
+#Aplicamos la concatenación vertical
+letras_fechas_listas <- rbind(fechaliquidacionformatoexcel, fechaliquidacionformatoorg)
+
+#Solo dejamos las columnas que necesitamos
+letras_fechas_listas <- letras_fechas_listas[ ,
+  c("FechaSubasta","FechaLiquidacion","MontoSubastado","MontoDemandado",          
+    "MontoAdjudicado ","RendimientoPPA")]
+
+# Convertimos a formato numerico las columnas que deben tener formato numerico
+letras_fechas_listas[c("MontoSubastado","MontoDemandado",          
+                          "MontoAdjudicado ","RendimientoPPA")] <- sapply(
+                            letras_fechas_listas[c("MontoSubastado","MontoDemandado",          
+                            "MontoAdjudicado ","RendimientoPPA")], as.numeric)
+
+head(letras_fechas_listas)
+
+```
+
+
+

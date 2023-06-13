@@ -1,6 +1,9 @@
 ---
 title: "Graficos de Barra - Geom Bar"
-output: html_document
+subtitle: "R con Enfoque Financiero: AulaABA "
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-27"
 ---
 
@@ -27,11 +30,25 @@ La función **`geom_bar()`** en ggplot2 tiene varios argumentos que puedes utili
 
 -   **`...`**: Este argumento de puntos suspensivos te permite pasar parámetros gráficos adicionales para personalizar la apariencia de las barras, como **`size`**, **`linetype`** o **`position`**.
 
-Estos son solo algunos de los argumentos más comúnmente utilizados de **`geom_bar()`**. Puedes encontrar más detalles y opciones adicionales en la documentación oficial de ggplot2: [**https://ggplot2.tidyverse.org/reference/geom_bar.html**](https://ggplot2.tidyverse.org/reference/geom_bar.html)
+Estos son solo algunos de los argumentos más comúnmente utilizados de **`geom_bar()`**. Puedes encontrar más detalles y opciones adicionales en la documentación oficial de ggplot2: [Documentacion Geom BAR](https://ggplot2.tidyverse.org/reference/geom_bar.html)
+
+```{r include=FALSE}
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
+
+opdiarias_rv <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
+opdiarias_rv <- na.omit(opdiarias_rv)
+
+opdiarias_rf <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
+opdiarias_rf <- na.omit(opdiarias_rf)   
+
+```
+
+
 
 ```{r}
-opdiarias_rf <- readRDS("../../Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
-
 data_barras <- opdiarias_rf |> 
   select(fecha_operacion, 
          "codigo"= `Cód. Local`, 
@@ -45,13 +62,16 @@ data_barras <- opdiarias_rf |>
   filter(semana != 21)
 
 titulo <- "Cantidad de Titulos Distintos Transados por Semana en 2023"
-subtitulo <- paste("De", min(opdiarias_rf$fecha_operacion), "a", max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]$fecha_operacion))
+subtitulo <- paste("De", min(opdiarias_rf$fecha_operacion), "a",
+                   max(opdiarias_rf[opdiarias_rf$fecha_operacion < as.Date("2023-05-22"),]
+                       $fecha_operacion))
 x_label <- "Semana del 2023"
 y_label <- "Cantidad de Titulos Distintos Transados"
 promedio_titulos <- mean(data_barras$cantidad_titulos)
 
 # Creando el grafico
-titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana), y = cantidad_titulos)) +
+titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana),
+                                             y = cantidad_titulos)) +
   geom_bar(stat = "identity", fill = "grey") + 
   labs(title = titulo,
        subtitle = subtitulo, 
@@ -60,7 +80,8 @@ titulos_semanales <- ggplot(data_barras, aes(x = as.factor(semana), y = cantidad
     geom_text(aes(label = cantidad_titulos),
               vjust = -0.5, 
               color = "black") + 
-  geom_hline(yintercept = promedio_titulos, linetype = "dashed", color = "red", linewidth = 0.5) +
+  geom_hline(yintercept = promedio_titulos,
+             linetype = "dashed", color = "red") +
 theme_classic()
 
 plot(titulos_semanales)

@@ -1,7 +1,10 @@
 ---
 title: "Distribucion de una Variable Continua - Precio de los Instrumentos Financieros"
-output: html_document
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-05-27"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -15,16 +18,22 @@ En R, hay varios tipos de gráficos que se pueden utilizar para visualizar la di
 
 -   **Histograma**: Un histograma muestra la frecuencia o conteo de valores dentro de intervalos o bins predefinidos. Proporciona una representación visual de la distribución de los datos y ayuda a identificar patrones, asimetrías o valores atípicos.
 
-```{r}
+```{r include=FALSE}
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
 
-library(tidyverse)
-
-opdiarias_rv <- readRDS("../../Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
+opdiarias_rv <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rv.rds")
 opdiarias_rv <- na.omit(opdiarias_rv)
 
-opdiarias_rf <- readRDS("../../Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
-opdiarias_rf <- na.omit(opdiarias_rf)                        
+opdiarias_rf <- readRDS(
+"~/GitHub/aulaABA/finanzas_con_r/aulaABA/Modulo #2 Importacion Avanzada y Casos Practicos/Semana 4- Casos Practicos/data/operaciones_diarias_rf.rds")
+opdiarias_rf <- na.omit(opdiarias_rf)   
 
+```
+
+
+```{r}
 vector_precios_rf <- as.numeric(opdiarias_rf$Precio)
 vector_precios_rv <- as.numeric(opdiarias_rv[as.numeric(opdiarias_rv$Precio) <10000, ]$Precio)
 

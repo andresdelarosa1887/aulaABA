@@ -1,5 +1,6 @@
 ---
 title: "Introducción a Tidyverse para Manipulación de Datos I"
+subtitle: "R con Enfoque Financiero: AulaABA "
 output:
   pdf_document: default
   html_document: default
