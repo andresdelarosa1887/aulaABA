@@ -1,6 +1,8 @@
 ---
 title: "Introduccion a PortfolioAnalytics"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-06-08"
 ---
 
@@ -12,10 +14,10 @@ knitr::opts_chunk$set(echo = TRUE)
 Consultamos los precios de las acciones FAANG entre enero 2015 y junio del 2023 y luego obtenemos los retornos diarios de estas acciones. 
 
 ```{r}
-suppressPackageStartupMessages(library(quantmod))
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(PerformanceAnalytics))
-suppressPackageStartupMessages(library(PortfolioAnalytics))
+suppressWarnings(suppressPackageStartupMessages(library(PerformanceAnalytics)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(PortfolioAnalytics)))
 
 precios_FAANG_vect <- c("AMZN", "META", "NFLX", "GOOGL", "AAPL")
 

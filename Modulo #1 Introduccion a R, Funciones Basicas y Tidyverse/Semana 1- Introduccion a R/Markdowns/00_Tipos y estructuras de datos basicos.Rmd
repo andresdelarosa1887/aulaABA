@@ -1,5 +1,5 @@
 ---
-title: "Tipos y estructuras de datos basicos"
+title: "Tipos y estructuras de datos básicos"
 subtitle: "R con Enfoque Financiero: AulaABA "
 output:
   pdf_document: default

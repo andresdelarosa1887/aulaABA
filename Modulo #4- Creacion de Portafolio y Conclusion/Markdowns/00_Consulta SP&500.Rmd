@@ -1,8 +1,10 @@
 ---
 title: "Consultando SP&500"
-subtitle: "R con Enfoque Financiero: AulaABA "
-output: html_document
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-06-08"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -30,9 +32,9 @@ GSPC es un acrónimo que se refiere al Índice Compuesto S&P 500, también conoc
 
 
 ```{r}
-suppressPackageStartupMessages(library(PerformanceAnalytics))
-suppressPackageStartupMessages(library(quantmod))
-suppressPackageStartupMessages(library(tidyverse))
+suppressWarnings(suppressPackageStartupMessages(library(PerformanceAnalytics)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 
 fecha_inicio <- "2015-01-01"
 fecha_final <- "2023-06-01"
@@ -45,7 +47,8 @@ SP500 <- GSPC
 
 ```{r pressure, echo=FALSE}
 SP500_mensual <- to.monthly(SP500, indexAt = "lastof", OHLC= FALSE)
-retornos_mensuales_SP500 <- Return.calculate(SP500_mensual, method= "log") %>% na.omit
+retornos_mensuales_SP500 <- Return.calculate(SP500_mensual, method= "log") %>%
+  na.omit
 write_rds(retornos_mensuales_SP500, "retornos_mensuales_SP&500.rds")
 head(retornos_mensuales_SP500)
 ```

@@ -1,8 +1,10 @@
 ---
 title: "Evaluacion del Retorno de un Portafolio"
-subtitle: "R con Enfoque Financiero: AulaABA "
-output: html_document
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-06-06"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -14,20 +16,22 @@ knitr::opts_chunk$set(echo = TRUE)
 Luego de que tenemos nuestro portafolio, analizamos los retornos del mismo. 
 
 ```{r}
-suppressPackageStartupMessages(library(quantmod))
-suppressPackageStartupMessages(library(tidyverse))
-suppressPackageStartupMessages(library(PerformanceAnalytics))
+suppressWarnings(suppressPackageStartupMessages(library(PerformanceAnalytics)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 
 FAANG <- readRDS("portafolio_FAANG_EW.rds")
 retornos_portf_faang <- FAANG$returns %>%
   data.frame(fecha= index(.)) %>%
   remove_rownames() 
 
-  retorno_FAANG <-  ggplot(data = retornos_portf_faang, aes(x = fecha, y = portfolio.returns*100)) +
+  retorno_FAANG <-  ggplot(data = retornos_portf_faang,
+                           aes(x = fecha, y = portfolio.returns*100)) +
     geom_line() +
     scale_x_date(date_labels = "%b-%Y")  +
     labs(title= "Evolucion del Retorno del Portafolio FAANG",
-         subtitle =  paste("Valores Mensuales de", min(retornos_portf_faang$fecha), "a", max(retornos_portf_faang$fecha)), 
+         subtitle =  paste("Valores Mensuales de", min(retornos_portf_faang$fecha),
+                           "a", max(retornos_portf_faang$fecha)), 
          x= "Fecha",
          y= "Retorno", 
          caption= "Yahoo Finance") + 
@@ -42,7 +46,8 @@ retornos_portf_faang <- FAANG$returns %>%
 ### Distribucion de los Retornos
 
 ```{r, echo=FALSE}
-  chart.Histogram(retornos_portf_faang$portfolio.returns, methods = c("add.density","add.centered"),
+  chart.Histogram(retornos_portf_faang$portfolio.returns,
+                  methods = c("add.density","add.centered"),
                   main = " Retorno del Portafolio FAANG", 
                   xlab= "Retorno", 
                   ylab= "Frecuencia")
@@ -52,7 +57,8 @@ retornos_portf_faang <- FAANG$returns %>%
 
 ```{r}
 sp500 <- Cl(readRDS("retornos_mensuales_SP&500.rds"))
-benchmark_returns <- cbind(sp500, retornos_portf_faang$portfolio.returns)
+benchmark_returns <- cbind(sp500,
+                           retornos_portf_faang$portfolio.returns)
 colnames(benchmark_returns) <- c("SP&500","FAAG_PORT")
 head(benchmark_returns)
 ```
@@ -75,7 +81,8 @@ plot(density(benchmark_returns$FAAG_PORT*100),
 
 ```{r}
 data.frame(table.AnnualizedReturns(benchmark_returns))
-charts.PerformanceSummary(benchmark_returns, main= "Desempeño del SP&500 y las Acciones FAANG")
+charts.PerformanceSummary(benchmark_returns,
+              main= "Desempeño del SP&500 y las Acciones FAANG")
 ```
 
 

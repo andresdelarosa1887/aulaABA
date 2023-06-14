@@ -1,8 +1,10 @@
 ---
 title: "Creacion del Portafolio"
-subtitle: "R con Enfoque Financiero: AulaABA "
-output: html_document
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-06-06"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -18,9 +20,9 @@ El rebalanceo de un portafolio anual es el proceso de ajustar las ponderaciones 
 Cuando se construye un portafolio, se establece una asignación de pesos o porcentajes para cada activo o clase de activos con el objetivo de alcanzar ciertos objetivos de rendimiento y nivel de riesgo. Sin embargo, a medida que pasa el tiempo, el valor de los activos individuales puede cambiar y, como resultado, las ponderaciones iniciales se desvían de la asignación deseada.
 
 ```{r}
-library(PerformanceAnalytics)
-library(quantmod)
-library(tidyverse)
+suppressWarnings(suppressPackageStartupMessages(library(PerformanceAnalytics)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 
 retornos_mensuales_FAANG <- readRDS("retornos_mensuales_FAANG.rds")
 
@@ -31,7 +33,8 @@ FAANG_EqualWeights <- Return.portfolio(
   R= retornos_mensuales_FAANG, 
   weights= pesos_iguales, 
   rebalance_on ="years", 
-  verbose= TRUE ##Activamos el verbose para obtener una lista con diferentes parámetros relacionados al cálculo del retorno de este inndice
+  verbose= TRUE ##Activamos el verbose para obtener una 
+  #lista con diferentes parámetros relacionados al cálculo del retorno de este indice
 )
 
 ##Obtenemos el objeto de retornos del portafolio
@@ -45,7 +48,9 @@ head(FAANG_EqualWeights$contribution)
 Es importante tener en cuenta que la periodicidad del rebalanceo y los pesos iniciales de cada acción se pueden modificar de acuerdo la estrategia de inversión seleccionada o un análisis técnico anterior como una optimización recurrente.
 
 ```{r}
-##Graficamos la evolución de los pesos de cada una de las acciones FAANG para tener una idea de como Return.portfolio hace los rebalanceos en los periodos especificados
+##Graficamos la evolución de los pesos de cada una de las 
+#acciones FAANG para tener una idea de como Return.portfolio hace
+#los rebalanceos en los periodos especificados
 PesosFinalDelPeriodo <- data.frame(FAANG_EqualWeights$EOP.Weight) 
 PesosFinalDelPeriodo <- tibble::rownames_to_column(PesosFinalDelPeriodo, "fecha")
 PesosFinalDelPeriodo2 <- gather(PesosFinalDelPeriodo, Acciones, Pesos, -fecha)

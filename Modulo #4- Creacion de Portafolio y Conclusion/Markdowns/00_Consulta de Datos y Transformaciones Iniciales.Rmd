@@ -1,8 +1,10 @@
 ---
 title: "Consulta de Datos y Transformaciones Iniciales"
-subtitle: "R con Enfoque Financiero: AulaABA "
-output: html_document
+subtitle: 'R con Enfoque Financiero: AulaABA '
 date: "2023-06-06"
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -20,9 +22,9 @@ En esta seccion definimos las acciones de las empresas que nos gustaria consulta
 -   Para unificar estas 5 listas en un solo objeto XTS utilizamos la funcion `reduce(merge)`
 
 ```{r}
-suppressPackageStartupMessages(library(PerformanceAnalytics))
-suppressPackageStartupMessages(library(quantmod))
-suppressPackageStartupMessages(library(tidyverse))
+suppressWarnings(suppressPackageStartupMessages(library(PerformanceAnalytics)))
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
 precios_FAANG_vect <- c("AMZN", "META", "NFLX", "GOOGL", "AAPL")
 
 fecha_inicio <- "2015-01-01"
@@ -57,7 +59,8 @@ head(precios_mensuales)
 Para convertir nuestros precios mensuales en retornos mensuales utilizamos la funcion `Return.calculate()` de performanceanalytics y utilizamos el metodo `log`
 
 ```{r}
-retornos_mensuales_FAANG <- Return.calculate(precios_mensuales, method= "log") %>% na.omit
+retornos_mensuales_FAANG <- Return.calculate(precios_mensuales,
+                                             method= "log") %>% na.omit
 head(retornos_mensuales_FAANG)
 write_rds(retornos_mensuales_FAANG, "retornos_mensuales_FAANG.rds")
 ```
@@ -68,7 +71,8 @@ write_rds(retornos_mensuales_FAANG, "retornos_mensuales_FAANG.rds")
 retornos_mensuales_FAANG_largo <- retornos_mensuales_FAANG %>%
   data.frame(fecha= index(.)) %>%
   remove_rownames() %>% 
-   pivot_longer(cols =all_of(precios_FAANG_vect), names_to = "Stock", values_to = "Retornos") 
+   pivot_longer(cols =all_of(precios_FAANG_vect),
+                names_to = "Stock", values_to = "Retornos") 
 
 
 unidos <- ggplot(retornos_mensuales_FAANG_largo, aes(x= Retornos)) +
