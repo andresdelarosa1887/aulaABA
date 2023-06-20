@@ -7,100 +7,66 @@ title: Comprobación de Conceptos Semana II
 1.  Enumera 5 diferencias entre Tidyverse y Base R:
 
 
-2.  Dado un vector de números, determinar cuántos elementos son mayores que 5.
-
-```{r}
-# Datos de ejemplo
-numeros <- c(3, 8, 2, 6, 4, 9, 1, 7)
-
-# Contador para almacenar la cantidad de números mayores que 5
-contador <- 0
-
-# Recorremos el vector con un bucle for
-for (num in numeros) {
-  if (num > 5) {
- ##Completar Codigo
-  }
-}
-```
-
-3. Dado un vector de tasas de interes, clasificar cada una en "menor al benchmark" o "mayor al benchmark" si consideramos el benchmark como 18.
+2. Completa el codigo para multiplicar la columna del rendimiento promedio ponderado por 100 y agrupar el monto total subastado por la columna mesFechaSubasta
 
 ```{r}
 
-# Datos de ejemplo
-tasas <- c(17, 23, 15, 30, 12, 20)
-
-# Vector para almacenar las clasificaciones
-clasificaciones <- character(length(edades))
-
-# Recorremos el vector con un bucle for
-for (i in 1:length(edades)) {
-  if (tasas[i] < 18) {
-     ##Completar Codigo
-  } else {
-     ##Completar Codigo
-  }
-}
-
+letras_bc <- letras_bc |>
+ mutate(
+   mesFechaSubasta= month(FechadeSubasta)
+    # Rendimiento Promedio ponderado *100
+   ) |> 
+  group_by( ) |> 
+  summarise()
+  
 ```
 
 
 
 ### Selecciona la opción correcta para cada una de las siguientes preguntas.
 
-1.  ¿Cuál de las siguientes opciones es un tipo de dato en R que representa valores numéricos enteros?
+1.  ¿Cuál de las siguientes opciones es una funcion que nos permite ver los nombres de una columna en base r?
 
-    a.  character
-    b.  integer
-    c.  logical
+    a.  colnames
+    b.  head
+    c.  intersect
     d.  numeric
 
-2.  ¿Cuál de las siguientes estructuras de datos en R se utiliza para almacenar una secuencia ordenada de elementos del mismo tipo?
+2.  ¿Cuál de las siguientes funciones nos permite concatenar dos dataframes de manera vertical?
 
-    a.  list
-    b.  data frame
-    c.  matrix
-    d.  vector
+    a.  cbind()
+    b.  as.DataFrame()
+    c.  rbind()
+    d.  length()
 
-3.  ¿Qué estructura de datos en R se utiliza para almacenar valores en una tabla bidimensional con filas y columnas?
+3.  ¿Qué funcion nos verificar las diferencias entre dos vectores?
 
-    a.  list
-    b.  data frame
-    c.  matrix
-    d.  vector
+    a.  intersect()
+    b.  setdiff()
+    c.  subset()
+    d.  list()
 
-4.  ¿Cuál de las siguientes estructuras de datos en R se utiliza para almacenar elementos únicos sin un orden específico?
+4.  ¿Cuál de las siguientes funciones nos permite determinar el tipo de objeto ?
 
-    a.  list
-    b.  data frame
-    c.  matrix
-    d.  vector
+    a.  merge()
+    b.  typeof()
+    c.  type()
+    d.  cbind()
 
-5.  ¿Cuál de las siguientes funciones en R se utiliza para acceder a elementos específicos de un vector o matriz mediante índices?
+5.  ¿Como se puede realizar un left join utilizando base R?
 
-    a.  subset()
-    b.  access()
-    c.  extract()
-    d.  []
+    a.  merge(x, y, all.x= FALSE, all.y=TRUE)
+    b.  merge(x, y, all.x= TRUE, all.y=TRUE)
+    c.  merge(x, y, all.x= TRUE, all.y=FALSE)
+    d.  merge(x, y)
 
-6.  ¿Cuál de las siguientes funciones en R se utiliza para agregar nuevos elementos a un vector existente?
+6.  ¿Cuál de las siguientes funciones en R tidyverse se utiliza para ver un resumen de las columnas que tiene un dataframe?
 
-    a.  append()
-    b.  extend()
-    c.  concatenate()
-    d.  c()
+    a.  head()
+    b.  glimpse()
+    c.  mutate()
+    d.  summarise()
 
-7.  ¿Cuál de las siguientes estructuras de datos en R se utiliza para almacenar pares de valores clave-valor?
 
-    a.  list
-    b.  data frame
-    c.  matrix
-    d.  named vector
 
-8.  ¿Cuál de las siguientes funciones en R se utiliza para ordenar un vector o matriz en orden ascendente o descendente?
 
-    a.  sort()
-    b.  order()
-    c.  arrange()
-    d.  rank()
