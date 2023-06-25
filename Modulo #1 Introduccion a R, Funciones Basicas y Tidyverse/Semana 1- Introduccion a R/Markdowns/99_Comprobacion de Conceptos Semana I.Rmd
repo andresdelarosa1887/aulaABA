@@ -1,5 +1,7 @@
 ---
-title: Comprobación de Conceptos Semana I
+title: "Comprobación de Conceptos Semana I"
+subtitle: "R con Enfoque Financiero: AulaABA "
+output: pdf_document
 ---
 
 ## Preguntas
@@ -36,10 +38,10 @@ for (num in numeros) {
 tasas <- c(17, 23, 15, 30, 12, 20)
 
 # Vector para almacenar las clasificaciones
-clasificaciones <- character(length(edades))
+clasificaciones <- character(length(tasas))
 
 # Recorremos el vector con un bucle for
-for (i in 1:length(edades)) {
+for (i in 1:length(tasas)) {
   if (tasas[i] < 18) {
      ##Completar Codigo
   } else {

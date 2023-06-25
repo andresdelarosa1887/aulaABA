@@ -1,5 +1,7 @@
 ---
-title: Comprobación de Conceptos Semana II
+title: "Comprobación de Conceptos Semana II"
+subtitle: "R con Enfoque Financiero: AulaABA "
+output: pdf_document
 ---
 
 ## Preguntas
@@ -11,14 +13,19 @@ title: Comprobación de Conceptos Semana II
 
 ```{r}
 
-letras_bc <- letras_bc |>
- mutate(
-   mesFechaSubasta= month(FechadeSubasta)
-    # Rendimiento Promedio ponderado *100
-   ) |> 
-  group_by( ) |> 
-  summarise()
-  
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+##Importacion de datos
+letras_bc <- read.table("../../../data/letras_bc_consolidado_clean.csv")
+
+# letras_bc <- letras_bc |>
+#  mutate(
+#    mesFechaSubasta= month(FechadeSubasta)
+#     # Rendimiento Promedio ponderado *100
+#    ) |> 
+#   group_by( ) |> 
+#   summarise()
+#   
+
 ```
 
 
@@ -69,4 +76,11 @@ letras_bc <- letras_bc |>
 
 
 
+## Respuestas
 
+a)  colnames
+c)  rbind
+b)  setdiff()
+b)  typeof()
+c)  merge(x, y, all.x= TRUE, all.y=FALSE)
+b) glimpse()
