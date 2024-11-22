@@ -4,11 +4,13 @@ suppressPackageStartupMessages(library(quantmod))
 suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(PerformanceAnalytics))
 suppressPackageStartupMessages(library(PortfolioAnalytics))
+suppressPackageStartupMessages(library(lubridate))
+
 
 precios_FAANG_vect <- c("AMZN", "META", "NFLX", "GOOGL", "AAPL")
 
 fecha_inicio <- "2015-01-01"
-fecha_final <- "2023-06-01"
+fecha_final <- today()
 
 precios_FAANG <- getSymbols( 
   precios_FAANG_vect, 

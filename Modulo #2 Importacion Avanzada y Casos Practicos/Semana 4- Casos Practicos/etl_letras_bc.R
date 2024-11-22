@@ -5,7 +5,7 @@ library(lubridate) ##para utilizar la funcion year
 
 
 ##Montos Colocados y Tasa de Rendimiento Promedio Ponderada 2007-2023
-letras_bc_consolidado_raw <- read_excel("Semana 2/data/letras_bc_consolidado_raw.xlsx")
+letras_bc_consolidado_raw <- read_excel("data/letras_bc_consolidado_raw.xlsx")
 
 letras_bc_consolidado_raw <- letras_bc_consolidado_raw[5:nrow(letras_bc_consolidado_raw), 2:7]
 colnames(letras_bc_consolidado_raw) <- c("FechadeSubasta", 

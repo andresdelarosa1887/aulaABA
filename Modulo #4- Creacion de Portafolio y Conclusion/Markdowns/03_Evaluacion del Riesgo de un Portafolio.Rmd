@@ -120,8 +120,6 @@ retornos_mensuales_FAANG_largo <- retornos_mensuales_FAANG_largo %>%
 
 ```
 
-
-
 ```{r}
 ggplot(data= retornos_mensuales_FAANG_largo, 
        aes(x= Stock, y= desviacion, color= Stock)) +
@@ -137,5 +135,3 @@ theme(legend.position = "none",
 theme_classic()
 
 ```
-
-

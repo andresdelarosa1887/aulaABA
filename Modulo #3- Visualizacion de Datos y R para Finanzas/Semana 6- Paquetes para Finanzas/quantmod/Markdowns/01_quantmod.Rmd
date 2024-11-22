@@ -1,12 +1,13 @@
 ---
-title: "Graficos de Barra - Geom Bar"
-output: html_document
+title: "QuantMod"
+output:
+  pdf_document: default
+  html_document: default
 date: "2023-05-27"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(tidyverse)
 ```
 
 ## QuantMod
@@ -18,13 +19,14 @@ El paquete "quantmod" en R es una herramienta que proporciona funcionalidades pa
 Esta parte consiste en obtener la informacion del mercado de valores de Estados Unidos. En el paquete quantmode se utiliza la funcion `GetSymbols` y le pasamos los argumentos de fecha inicial y fecha final.
 
 ```{r}
-library(quantmod)
-library(tidyverse)
+suppressWarnings(suppressPackageStartupMessages(library(quantmod)))
+suppressWarnings(suppressPackageStartupMessages(library(tidyverse)))
+suppressWarnings(suppressPackageStartupMessages(library(lubridate)))
 
 FAANG <- c("AAPL", "GOOGL", "AMZN", "META", "NFLX")
 fecha_inicio <- "2022-01-01"
 fecha_finalizacion <- today()
-getSymbols(FAANG, from=start_date, to= end_date)
+getSymbols(FAANG, from=fecha_inicio, to= fecha_finalizacion)
 
 colnames(merge(AAPL, GOOGL, AMZN, META, NFLX))
 ```
@@ -82,7 +84,7 @@ chartSeries(GOOGL, theme="white", name = "Retornos Diarios de Amazon")
 
 addSMA(n = 10, on = 1, with.col = Cl, overlay = TRUE, col = "blue")
 addSMA(n = 60, on = 1, with.col = Cl, overlay = TRUE, col = "black")
-SMA()
+# SMA()
 ```
 
 ## Bandas de Bollinger
@@ -108,5 +110,5 @@ returns <- dailyReturn(Cl(META))
 chartSeries(META, theme="white", name = "Retornos Diarios de META")
 #addBBands(n = 10, sd = 2, ma = "SMA", draw = 'bands', on = -1)
 addBBands(n = 60, sd = 1, ma = "SMA", draw = 'bands', on = -1)
-BBands(Cl(MSFT), n = 20, sd = 2)
+# BBands(Cl(MSFT), n = 20, sd = 2)
 ```
